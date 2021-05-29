@@ -19,9 +19,12 @@ dependencies {
     compileOnly("com.destroystokyo.paper", "paper-api", "1.12.2-R0.1-SNAPSHOT")
     compileOnly("org.spigotmc", "spigot", "1.12.2-R0.1-SNAPSHOT")
 
+    compileOnly("net.luckperms", "api", "5.3")
+
     compileOnly(files("$pluginStorage/ResourcepackSoundPlayer_S.jar"))
     compileOnly(files("$pluginStorage/ServerCore_S.jar"))
     compileOnly(files("$pluginStorage/Dependencies/item-nbt-api-plugin-2.6.0.jar"))
+    compileOnly(files("C:/Users/PHR/Desktop/마인즈서버/plugins/EnderVaults-Bukkit-1.0.12.jar"))
 }
 
 spigot {
@@ -29,6 +32,7 @@ spigot {
     apiVersion = "1.12"
     version = project.version.toString()
     depends = listOf("ServerCore")
+    softDepends = listOf("EnderVaults")
     commands {
         create("nbtview") {
             permission = "op.op"
