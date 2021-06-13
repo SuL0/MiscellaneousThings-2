@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.hanging.HangingBreakByEntityEvent
 
 
-object StopProjectileBreakingHanging: Listener {
+object StopProjectileFromBreakingHanging: Listener {
     // Hanging(Paint, ItemFrame) 을 Op인 플레이어가 GM 1로 손으로 부술 때만 허용
 
 

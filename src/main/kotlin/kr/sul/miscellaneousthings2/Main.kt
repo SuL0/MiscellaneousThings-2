@@ -4,7 +4,7 @@ import kr.sul.miscellaneousthings2.command.KillAllCommand
 import kr.sul.miscellaneousthings2.command.NbtViewCommand
 import kr.sul.miscellaneousthings2.endervaultsaddon.SelectorListener
 import kr.sul.miscellaneousthings2.something.SendResourcePack
-import kr.sul.miscellaneousthings2.something.StopProjectileBreakingHanging
+import kr.sul.miscellaneousthings2.something.StopProjectileFromBreakingHanging
 import kr.sul.miscellaneousthings2.something.StopServerJoinTooEarly
 import kr.sul.miscellaneousthings2.something.TakeAwayPermissionIfNotOp
 import kr.sul.miscellaneousthings2.zombie.spawner.ZombieSpawner
@@ -31,7 +31,7 @@ class Main : JavaPlugin(), Listener {
 
     private fun registerClasses() {
         Bukkit.getPluginManager().registerEvents(StopServerJoinTooEarly, plugin)
-        Bukkit.getPluginManager().registerEvents(StopProjectileBreakingHanging, plugin)
+        Bukkit.getPluginManager().registerEvents(StopProjectileFromBreakingHanging, plugin)
         Bukkit.getPluginManager().registerEvents(TakeAwayPermissionIfNotOp, plugin)
         Bukkit.getPluginManager().registerEvents(SendResourcePack, plugin)
         Bukkit.getPluginManager().registerEvents(KillAllCommand, plugin)
