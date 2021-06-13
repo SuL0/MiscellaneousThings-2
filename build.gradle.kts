@@ -23,8 +23,8 @@ dependencies {
 
     compileOnly(files("$pluginStorage/ResourcepackSoundPlayer_S.jar"))
     compileOnly(files("$pluginStorage/ServerCore_S.jar"))
+    compileOnly(files("$pluginStorage/EnderVaults-Bukkit-v1.0.13.jar"))
     compileOnly(files("$pluginStorage/Dependencies/item-nbt-api-plugin-2.6.0.jar"))
-    compileOnly(files("C:/Users/PHR/Desktop/마인즈서버/plugins/EnderVaults-Bukkit-1.0.12.jar"))
 }
 
 spigot {
