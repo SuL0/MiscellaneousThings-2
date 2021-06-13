@@ -3,10 +3,7 @@ package kr.sul.miscellaneousthings2
 import kr.sul.miscellaneousthings2.command.KillAllCommand
 import kr.sul.miscellaneousthings2.command.NbtViewCommand
 import kr.sul.miscellaneousthings2.endervaultsaddon.SelectorListener
-import kr.sul.miscellaneousthings2.something.SendResourcePack
-import kr.sul.miscellaneousthings2.something.StopProjectileFromBreakingHanging
-import kr.sul.miscellaneousthings2.something.StopServerJoinTooEarly
-import kr.sul.miscellaneousthings2.something.TakeAwayPermissionIfNotOp
+import kr.sul.miscellaneousthings2.something.*
 import kr.sul.miscellaneousthings2.zombie.spawner.EditMob
 import kr.sul.miscellaneousthings2.zombie.spawner.ZombieSpawner
 import kr.sul.servercore.util.ObjectInitializer
@@ -37,6 +34,7 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(SendResourcePack, plugin)
         Bukkit.getPluginManager().registerEvents(KillAllCommand, plugin)
         Bukkit.getPluginManager().registerEvents(EditMob, plugin)
+        Bukkit.getPluginManager().registerEvents(PreventArmorstandFromBreaking, plugin)
         ObjectInitializer.forceInit(ZombieSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
 
