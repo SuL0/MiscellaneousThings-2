@@ -35,6 +35,7 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(KillAllCommand, plugin)
         Bukkit.getPluginManager().registerEvents(EditMob, plugin)
         Bukkit.getPluginManager().registerEvents(PreventArmorstandFromBreaking, plugin)
+        Bukkit.getPluginManager().registerEvents(InvalidateSomeHealAndDamage, plugin)
         ObjectInitializer.forceInit(ZombieSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
 
