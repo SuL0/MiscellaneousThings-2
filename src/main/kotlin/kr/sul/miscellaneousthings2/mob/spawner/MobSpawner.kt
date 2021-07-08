@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.zombie.spawner
+package kr.sul.miscellaneousthings2.mob.spawner
 
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
 import org.bukkit.Bukkit
@@ -7,10 +7,10 @@ import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
 import kotlin.random.Random
 
-object ZombieSpawner {
+object MobSpawner {
     private val random = Random
 
-    private const val SCHEDULER_TERM = 20*5L
+    private val SCHEDULER_TERM = 20 * MobSpawnerConfig.mobSpawningTerm.toLong()
     private val worlds = arrayListOf<World>()
 
     init {
@@ -27,7 +27,7 @@ object ZombieSpawner {
 
         // 대상 월드 등록
         Bukkit.getScheduler().runTask(plugin) {
-            arrayListOf("Channel01").forEach {
+            MobSpawnerConfig.worldNames.forEach {
                 worlds.add(Bukkit.getWorld(it))
             }
         }
@@ -36,7 +36,7 @@ object ZombieSpawner {
         Bukkit.getScheduler().runTaskTimer(plugin, {
             for (world in worlds) {
                 for (p in world.players) {
-                    spawnZombieInNearby(p)
+                    spawnMobInNearby(p)
                 }
             }
         }, SCHEDULER_TERM, SCHEDULER_TERM)
@@ -44,18 +44,22 @@ object ZombieSpawner {
     }
 
 
-    // spawnZombie이긴 한데, Husk를 소환할 수도 있음
-    private fun spawnZombieInNearby(p: Player) {
-        val howManyZombiesToSpawn =
-            if (random.nextInt(10)+1 <= 3) random.nextInt(2, 6+1)  // 밀집 스폰(2~6마리) 30%
-            else 1  // 개별 스폰 70%
+    // Zombie 또는 Husk
+    private fun spawnMobInNearby(p: Player) {
+        val range = MobSpawnerConfig.numRangeOfSpawningMobDensely
+        val howManyMobsToSpawn =
+            if (random.nextInt(0, 100+1) <= MobSpawnerConfig.chanceOfSpawningMobDensely) {
+                random.nextInt(range.min, range.max+1)
+            } else {
+                1
+            }
 
         // 스폰
         val appropirateLoc = AppropriateLocFinder.find(p, SpawnerMobInfo.mobsHabitatBlockTypeList)
             ?: return
         val whatMobToBeSpawned = SpawnerMobInfo.get(appropirateLoc.block.type)
 
-        for (i in 1..howManyZombiesToSpawn) {
+        for (i in 1..howManyMobsToSpawn) {
             // 여러마리 소환할 땐 위치 1.5칸씩 랜덤하게 옆으로
             whatMobToBeSpawned.spawn(appropirateLoc)
         }

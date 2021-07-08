@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.zombie.spawner
+package kr.sul.miscellaneousthings2.mob.spawner
 
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
 import kr.sul.servercore.file.simplylog.LogLevel

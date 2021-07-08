@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.zombie.spawner
+package kr.sul.miscellaneousthings2.mob.spawner
 
 import de.tr7zw.nbtapi.NBTEntity
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
@@ -18,10 +18,11 @@ import java.util.function.Consumer
  * @param howToSpawn 해당 몹 스폰하는 방법
  */
 enum class SpawnerMobInfo(val habitatBlockType: Material, private val howToSpawn: Consumer<Location>) {
+
     ZOMBIE(Material.GRASS, { spawnLoc ->
         val waitFor = 10*20L
         spawnAnimation(spawnLoc, ItemStack(Material.STONE_AXE), waitFor)          // TODO 스폰 모션
-        org.bukkit.Bukkit.getScheduler().runTaskLater(kr.sul.miscellaneousthings2.Main.Companion.plugin, {
+        Bukkit.getScheduler().runTaskLater(plugin, {
             spawnLoc.world.spawnEntity(spawnLoc, EntityType.ZOMBIE)
         }, waitFor)
     }),
@@ -42,14 +43,14 @@ enum class SpawnerMobInfo(val habitatBlockType: Material, private val howToSpawn
         const val ARMORSTAND_TAG = "For Mob Spawn Animation"
         val mobsHabitatBlockTypeList = run {
             val list = arrayListOf<Material>()
-            for (habitatBlockType in SpawnerMobInfo.values().map { it.habitatBlockType }) {
+            for (habitatBlockType in values().map { it.habitatBlockType }) {
                 list.add(habitatBlockType)
             }
             return@run list
         }
 
         fun get(habitatBlockType: Material): SpawnerMobInfo {
-            for (mobInfo in SpawnerMobInfo.values()) {
+            for (mobInfo in values()) {
                 if (habitatBlockType == mobInfo.habitatBlockType) {
                     return mobInfo
                 }

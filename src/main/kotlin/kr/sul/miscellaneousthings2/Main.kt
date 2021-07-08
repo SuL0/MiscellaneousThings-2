@@ -1,11 +1,13 @@
 package kr.sul.miscellaneousthings2
 
+import kr.sul.miscellaneousthings2.chat.ChatInSpawn
 import kr.sul.miscellaneousthings2.command.KillAllCommand
 import kr.sul.miscellaneousthings2.command.NbtViewCommand
 import kr.sul.miscellaneousthings2.endervaultsaddon.SelectorListener
+import kr.sul.miscellaneousthings2.knockdown.RideTest
 import kr.sul.miscellaneousthings2.something.*
-import kr.sul.miscellaneousthings2.zombie.spawner.EditMob
-import kr.sul.miscellaneousthings2.zombie.spawner.ZombieSpawner
+import kr.sul.miscellaneousthings2.mob.spawner.EditMob
+import kr.sul.miscellaneousthings2.mob.spawner.MobSpawner
 import kr.sul.servercore.util.ObjectInitializer
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
@@ -36,7 +38,9 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(EditMob, plugin)
         Bukkit.getPluginManager().registerEvents(PreventArmorstandFromBreaking, plugin)
         Bukkit.getPluginManager().registerEvents(InvalidateSomeHealAndDamage, plugin)
-        ObjectInitializer.forceInit(ZombieSpawner::class.java)
+        Bukkit.getPluginManager().registerEvents(ChatInSpawn, plugin)
+        Bukkit.getPluginManager().registerEvents(RideTest, plugin)
+        ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
 
         getCommand("nbtview").executor = NbtViewCommand
