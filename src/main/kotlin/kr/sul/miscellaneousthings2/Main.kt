@@ -52,6 +52,7 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(WarpGUI, plugin)
         Bukkit.getPluginManager().registerEvents(WarpPlayerDataMgr, plugin)
         Bukkit.getPluginManager().registerEvents(CombineArmor, plugin)
+        Bukkit.getPluginManager().registerEvents(ForceSneakToPickUp, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
         ObjectInitializer.forceInit(FixToDayInSomeWorlds::class.java)
