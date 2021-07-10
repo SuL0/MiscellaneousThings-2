@@ -11,7 +11,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.*
-import org.bukkit.event.world.ChunkLoadEvent
+import org.bukkit.event.world.ChunkUnloadEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -80,8 +80,10 @@ object EditMob: Listener {
             }
         }
     }
-    @EventHandler
-    fun onChunkLoad(e: ChunkLoadEvent) {
+
+    // NOTE 셜커가 청크 언로드를 Cancel하기에, priority Lowest로 해 두었음
+    @EventHandler(priority = EventPriority.LOWEST)
+    fun onChunkUnload(e: ChunkUnloadEvent) {
         e.world.entities.filterIsInstance<Zombie>().forEach {
             it.remove()
         }

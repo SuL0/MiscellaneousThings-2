@@ -2,6 +2,9 @@ package kr.sul.miscellaneousthings2.mob.spawner
 
 import de.tr7zw.nbtapi.NBTEntity
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
+import kr.sul.miscellaneousthings2.backgroundmusic.BackgroundMusicPerPlayer
+import kr.sul.servercore.util.ItemBuilder.durabilityIB
+import kr.sul.servercore.util.ItemBuilder.unbreakableIB
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -9,6 +12,7 @@ import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
+import org.bukkit.scheduler.BukkitRunnable
 import java.lang.Exception
 import java.util.function.Consumer
 
@@ -20,13 +24,14 @@ import java.util.function.Consumer
  */
 enum class SpawnerMobInfo(val habitatBlockType: Material, private val howToSpawn: Consumer<Location>) {
     ZOMBIE(Material.GRASS, { spawnLoc ->
-        val waitFor = (1.7*20).toLong()
-//        spawnAnimation(spawnLoc, ItemStack(Material.FLINT_AND_STEEL).durabilityIB(14).unbreakableIB(true), waitFor)
-//        Bukkit.getScheduler().runTaskLater(plugin, {
-        val mob = spawnLoc.world.spawnEntity(spawnLoc, EntityType.ZOMBIE) as org.bukkit.entity.Zombie
-        unarmorLivingEntity(mob)
-        mob.isBaby = false
-//        }, waitFor)
+        val waitFor = 2*20L
+        spawnAnimation(spawnLoc, ItemStack(Material.FLINT_AND_STEEL).durabilityIB(30).unbreakableIB(true), waitFor)
+        Bukkit.getScheduler().runTaskLater(plugin, {
+            val mob = spawnLoc.world.spawnEntity(spawnLoc, EntityType.ZOMBIE) as org.bukkit.entity.Zombie
+            mob.world.spawnParticle(org.bukkit.Particle.CLOUD, mob.location, 2, 0.0, 0.0, 0.0, 0.1)
+            unarmorLivingEntity(mob)
+            mob.isBaby = false
+        }, waitFor)
     });
 //    HUSK(Material.SAND, { spawnLoc ->
 //        val waitFor = 10*20L
@@ -61,16 +66,24 @@ enum class SpawnerMobInfo(val habitatBlockType: Material, private val howToSpawn
         }
 
 
-
-        // TODO 리팩 좀비 기어나오는 타이밍 맞추기
+        /**
+         * itemForAnimation 아이템 내구도가 2틱마다 줄어들면서 Animation
+         */
         private fun spawnAnimation(loc: Location, itemForAnimation: ItemStack, waitFor: Long) {
-            val armorStand = loc.world.spawnEntity(loc.clone().add(0.0, -1.0, 0.0), EntityType.ARMOR_STAND) as ArmorStand
+            val armorStand = loc.world.spawnEntity(loc.clone().add(0.0, -0.5, 0.0), EntityType.ARMOR_STAND) as ArmorStand
             NBTEntity(armorStand).run { setByte("Invisible", 1); setByte("NoGravity", 1) }  // NBTEntity는 NBTItem과 다르게 item = nbti.item 같은 과정 없어도 알아서 적용됨
             armorStand.customName = ARMORSTAND_TAG
             armorStand.helmet = itemForAnimation
 
+            // 2틱마다 내구도 1씩 까기
+            val task = Bukkit.getScheduler().runTaskTimer(plugin, {
+                itemForAnimation.durability = (itemForAnimation.durability + 1).toShort()
+                armorStand.helmet = itemForAnimation
+            }, 2L, 2L)
+
             // waitFor 후에 아머스탠드 삭제
             Bukkit.getScheduler().runTaskLater(plugin, {
+                task.cancel()
                 armorStand.remove()
             }, waitFor)
         }
