@@ -1,5 +1,6 @@
 package kr.sul.miscellaneousthings2
 
+import kr.sul.miscellaneousthings2.chat.AreaChat
 import kr.sul.miscellaneousthings2.chat.ChatInSpawn
 import kr.sul.miscellaneousthings2.command.KillAllCommand
 import kr.sul.miscellaneousthings2.command.NbtViewCommand
@@ -11,7 +12,6 @@ import kr.sul.miscellaneousthings2.something.*
 import kr.sul.miscellaneousthings2.warpgui.WarpGUI
 import kr.sul.miscellaneousthings2.warpgui.data.WarpPlayerDataMgr
 import kr.sul.servercore.util.ObjectInitializer
-import kr.sul.servercore.util.UniqueIdAPI
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -48,7 +48,7 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(ChatInSpawn, plugin)
         Bukkit.getPluginManager().registerEvents(RideTest, plugin)
         Bukkit.getPluginManager().registerEvents(DamageScouter, plugin)
-//        Bukkit.getPluginManager().registerEvents(AreaChat, plugin)
+        Bukkit.getPluginManager().registerEvents(AreaChat, plugin)
         Bukkit.getPluginManager().registerEvents(WarpGUI, plugin)
         Bukkit.getPluginManager().registerEvents(WarpPlayerDataMgr, plugin)
         Bukkit.getPluginManager().registerEvents(CombineArmor, plugin)

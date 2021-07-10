@@ -9,6 +9,7 @@ import kr.sul.servercore.util.ClassifyWorlds
 import kr.sul.servercore.util.ItemBuilder.nameIB
 import kr.sul.servercore.util.ItemBuilder.unbreakableIB
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.entity.Player
@@ -54,9 +55,9 @@ object WarpGUI: Listener {
         val inv = Bukkit.createInventory(p, GUI_SIZE, "")
         val ui = ItemStack(Material.FLINT_AND_STEEL, 1, 20).nameIB("§a").unbreakableIB(true)
         inv.setItem(49, ui)
-        inv.setItem(3, GuiItems.normalButton.channel(1).world(testWorld))
-        inv.setItem(4, GuiItems.normalButton.channel(2).world(testWorld))
-        inv.setItem(5, GuiItems.normalButton.channel(3).world(testWorld))
+        inv.setItem(3, GuiItems.normalButton.channel(1).world("Normal-1"))
+        inv.setItem(4, GuiItems.normalButton.channel(1).world("Normal-1"))
+        inv.setItem(5, GuiItems.normalButton.channel(1).world("Normal-1"))
 
         if (!pData.haveEverPlayedOnNormal) {
             // 아예 그냥 잠금
@@ -70,9 +71,9 @@ object WarpGUI: Listener {
             inv.setItem(23, GuiItems.hardTestButton)
         } else {
             // 하드
-            inv.setItem(21, GuiItems.hardButton.channel(1).world(testWorld))
-            inv.setItem(22, GuiItems.hardButton.channel(2).world(testWorld))
-            inv.setItem(23, GuiItems.hardButton.channel(3).world(testWorld))
+            inv.setItem(21, GuiItems.hardButton.channel(1).world("Hard-1"))
+            inv.setItem(22, GuiItems.hardButton.channel(1).world("Hard-1"))
+            inv.setItem(23, GuiItems.hardButton.channel(1).world("Hard-1"))
         }
 
         inv.setItem(39, GuiItems.lockedButton)
@@ -107,6 +108,7 @@ object WarpGUI: Listener {
     fun onWarpGuiClick(e: InventoryClickEvent) {
         val p = e.whoClicked as Player
         if (p.hasMetadata(IS_GUI_OPENED_METAKEY) && e.clickedInventory.size == GUI_SIZE) {
+            e.isCancelled = true
             if (e.currentItem.type == Material.AIR) return
             val item = e.currentItem
             val nbti = NbtItem(item)
@@ -122,6 +124,12 @@ object WarpGUI: Listener {
         }
     }
     private fun warp(p: Player, warpName: String, channel: Int, world: World) {
-
+        if (warpName == "노말") {
+            p.teleport(Location(world, 469.5, 70.0, 575.5))
+            p.sendMessage("§c§lWARP: §f노멀-0$channel §7(으)로 텔레포트 되었습니다.")
+        }
+//        else if (warpName == "하드") {
+//
+//        }
     }
 }

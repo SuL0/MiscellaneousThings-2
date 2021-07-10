@@ -2,7 +2,6 @@ package kr.sul.miscellaneousthings2.warpgui.data
 
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
 import kr.sul.servercore.util.UptimeBasedOnTick
-import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -63,10 +62,8 @@ object WarpPlayerDataMgr: Listener {
         val p = e.player
         val dataLoadedFromFile = loadDataFromFile(p)
         if (dataLoadedFromFile != null) {
-            Bukkit.broadcastMessage("loaded")
             dataStorage[p] = dataLoadedFromFile
         } else {
-            Bukkit.broadcastMessage("created new obj")
             dataStorage[p] = PlayerData(p.uniqueId.toString(), true)
         }
     }

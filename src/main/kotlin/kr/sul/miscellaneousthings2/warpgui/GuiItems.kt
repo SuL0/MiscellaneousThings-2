@@ -1,8 +1,12 @@
 package kr.sul.miscellaneousthings2.warpgui
 
+import kr.sul.miscellaneousthings2.Main.Companion.plugin
+import kr.sul.servercore.file.simplylog.LogLevel
+import kr.sul.servercore.file.simplylog.SimplyLog
 import kr.sul.servercore.nbtapi.NbtItem
 import kr.sul.servercore.util.ItemBuilder.loreIB
 import kr.sul.servercore.util.ItemBuilder.nameIB
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.inventory.ItemStack
@@ -110,7 +114,12 @@ object GuiItems {
         nbti.applyToOriginal()
         return this
     }
-    fun ItemStack.world(world: World): ItemStack {
+    fun ItemStack.world(world: String): ItemStack {
+        val world = Bukkit.getWorld(world)
+        if (world == null) {
+            SimplyLog.log(LogLevel.ERROR_LOW, plugin, "[${this.itemMeta.displayName}] World $world 는 없는 월드임")
+            return this
+        }
         this.nameIB(this.itemMeta.displayName.replace("%current_player%", world.playerCount.toString()))
         val nbti = NbtItem(this)
         nbti.tag.setString(WORLD_NAME_KEY, world.name)
