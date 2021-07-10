@@ -5,14 +5,19 @@ import kr.sul.miscellaneousthings2.command.KillAllCommand
 import kr.sul.miscellaneousthings2.command.NbtViewCommand
 import kr.sul.miscellaneousthings2.endervaultsaddon.SelectorListener
 import kr.sul.miscellaneousthings2.knockdown.RideTest
-import kr.sul.miscellaneousthings2.something.*
 import kr.sul.miscellaneousthings2.mob.spawner.EditMob
 import kr.sul.miscellaneousthings2.mob.spawner.MobSpawner
+import kr.sul.miscellaneousthings2.something.*
+import kr.sul.miscellaneousthings2.warpgui.WarpGUI
+import kr.sul.miscellaneousthings2.warpgui.data.WarpPlayerDataMgr
 import kr.sul.servercore.util.ObjectInitializer
 import org.bukkit.Bukkit
+import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.logging.Level
 
 class Main : JavaPlugin(), Listener {
     companion object {
@@ -27,6 +32,7 @@ class Main : JavaPlugin(), Listener {
     }
 
     override fun onDisable() {
+        WarpPlayerDataMgr.onPluginDisable()
     }
 
     private fun registerClasses() {
@@ -40,9 +46,37 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(InvalidateSomeHealAndDamage, plugin)
         Bukkit.getPluginManager().registerEvents(ChatInSpawn, plugin)
         Bukkit.getPluginManager().registerEvents(RideTest, plugin)
+        Bukkit.getPluginManager().registerEvents(DamageScouter, plugin)
+//        Bukkit.getPluginManager().registerEvents(AreaChat, plugin)
+        Bukkit.getPluginManager().registerEvents(WarpGUI, plugin)
+        Bukkit.getPluginManager().registerEvents(WarpPlayerDataMgr, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
 
         getCommand("nbtview").executor = NbtViewCommand
+
+        // TODO FOr TEST!
+        Bukkit.getPluginManager().registerEvents(this, plugin)
+    }
+
+    // TODO TEST
+    @EventHandler
+    fun testCommand(e: PlayerCommandPreprocessEvent) {
+        if (e.message.startsWith("/dur") && e.message.contains(" ") && e.player.isOp) {
+            e.isCancelled = true
+            val arg1 = e.message.split(" ")[1].toShort()
+            val item = e.player.inventory.itemInMainHand
+            item.durability = (item.durability - arg1).toShort()
+        }
+
+        if (e.message == "/아이템추출" && e.player.isOp) {
+            e.isCancelled = true
+            val item = e.player.inventory.itemInMainHand
+            Bukkit.getLogger().log(Level.INFO, "-----------------------")
+            Bukkit.getLogger().log(Level.INFO, item.itemMeta.displayName.replace("§", "&"))
+            item.itemMeta.lore.forEach {
+                Bukkit.getLogger().log(Level.INFO, it.replace("§", "&"))
+            }
+        }
     }
 }
