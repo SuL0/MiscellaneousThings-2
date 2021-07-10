@@ -6,13 +6,14 @@ import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.entity.Monster
 import org.bukkit.entity.Player
+import org.bukkit.entity.Zombie
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.entity.EntityDeathEvent
-import org.bukkit.event.entity.EntityPickupItemEvent
+import org.bukkit.event.entity.*
+import org.bukkit.event.world.ChunkLoadEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 object EditMob: Listener {
     private val AKnockbackWorlds = arrayListOf<World>()
@@ -64,6 +65,25 @@ object EditMob: Listener {
                 e.isCancelled = true
                 e.entity.velocity = e.hitBy.location.direction.multiply(MobSpawnerConfig.BKnockbackStrength)
             }
+        }
+    }
+
+
+
+
+    // 포션 효과
+    @EventHandler
+    fun onMobSpawn(e: EntitySpawnEvent) {
+        if (e.entity is Zombie) {
+            if (e.location.world.name.startsWith("Hard")) {
+                (e.entity as Zombie).addPotionEffect(PotionEffect(PotionEffectType.SPEED, 1000000, 1, true, false))
+            }
+        }
+    }
+    @EventHandler
+    fun onChunkLoad(e: ChunkLoadEvent) {
+        e.world.entities.filterIsInstance<Zombie>().forEach {
+            it.remove()
         }
     }
 }

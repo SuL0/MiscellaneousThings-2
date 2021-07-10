@@ -5,6 +5,7 @@ import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
+import org.bukkit.entity.Zombie
 import kotlin.random.Random
 
 object MobSpawner {
@@ -46,7 +47,7 @@ object MobSpawner {
 
     // Zombie 또는 Husk
     private fun spawnMobInNearby(p: Player) {
-        val range = MobSpawnerConfig.numRangeOfSpawningMobDensely
+        val range = MobSpawnerConfig.numRangeOfSpawningMobDensely // 밀집 스폰 마리수 범위
         val howManyMobsToSpawn =
             if (random.nextInt(0, 100+1) <= MobSpawnerConfig.chanceOfSpawningMobDensely) {
                 random.nextInt(range.min, range.max+1)
@@ -55,6 +56,9 @@ object MobSpawner {
             }
 
         // 스폰
+        if (p.getNearbyEntities(30.0, 30.0, 30.0).filterIsInstance<Zombie>().size > 10) {  // TODO [임시방편] 주변에 몹이 너무 많으면 일단 몹 스폰 중지
+            return
+        }
         val appropirateLoc = AppropriateLocFinder.find(p, SpawnerMobInfo.mobsHabitatBlockTypeList)
             ?: return
         val whatMobToBeSpawned = SpawnerMobInfo.get(appropirateLoc.block.type)
