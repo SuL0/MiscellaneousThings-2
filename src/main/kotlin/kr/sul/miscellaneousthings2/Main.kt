@@ -5,6 +5,7 @@ import kr.sul.miscellaneousthings2.chat.ChatInSpawn
 import kr.sul.miscellaneousthings2.command.KillAllCommand
 import kr.sul.miscellaneousthings2.command.NbtViewCommand
 import kr.sul.miscellaneousthings2.endervaultsaddon.SelectorListener
+import kr.sul.miscellaneousthings2.endervaultsaddon.VaultCommand
 import kr.sul.miscellaneousthings2.knockdown.RideTest
 import kr.sul.miscellaneousthings2.mob.spawner.EditMob
 import kr.sul.miscellaneousthings2.mob.spawner.MobSpawner
@@ -53,6 +54,8 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(WarpPlayerDataMgr, plugin)
         Bukkit.getPluginManager().registerEvents(CombineArmor, plugin)
         Bukkit.getPluginManager().registerEvents(ForceSneakToPickUp, plugin)
+        Bukkit.getPluginManager().registerEvents(PreventToPickUpVanillaItem, plugin)
+        Bukkit.getPluginManager().registerEvents(VaultCommand, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
         ObjectInitializer.forceInit(FixToDayInSomeWorlds::class.java)

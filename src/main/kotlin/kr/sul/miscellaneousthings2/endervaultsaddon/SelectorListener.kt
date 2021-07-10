@@ -16,6 +16,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
@@ -68,12 +69,8 @@ object SelectorListener: Listener {
         }
     }
 
-//    @EventHandler
-//    fun getKey(e: AsyncPlayerChatEvent) {
-//        e.player.inventory.addItem(VaultKey.WOODEN_KEY.getItem())
-//    }
 
-    private fun addPermission(userUuid: UUID, permission: String) {
+    fun addPermission(userUuid: UUID, permission: String) {
         // < 방법 1 >
         // Load, modify, then save
         luckPerms.userManager.modifyUser(userUuid) { user ->
@@ -86,8 +83,18 @@ object SelectorListener: Listener {
         // luckPerms.userManager.saveUser(user)
     }
 
-    private fun hasPermission(p: Player, permission: String): Boolean {
+    fun hasPermission(p: Player, permission: String): Boolean {
         val user = luckPerms.getPlayerAdapter(Player::class.java).getUser(p)
         return user.cachedData.permissionData.checkPermission(permission).asBoolean()
+    }
+
+
+    @EventHandler
+    fun onCommand(e: PlayerCommandPreprocessEvent) {
+        if (e.message == "/g창고열쇠" && e.player.isOp) {
+            e.player.inventory.addItem(VaultKey.WOODEN_KEY.getItem())
+            e.player.sendMessage("§c§lKEY: §7OP의 권한으로 창고 열쇠를 가져왔습니다.")
+            e.isCancelled = true
+        }
     }
 }
