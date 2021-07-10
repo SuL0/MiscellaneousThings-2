@@ -54,6 +54,7 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(CombineArmor, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
+        ObjectInitializer.forceInit(FixToDayInSomeWorlds::class.java)
 
         getCommand("nbtview").executor = NbtViewCommand
 
