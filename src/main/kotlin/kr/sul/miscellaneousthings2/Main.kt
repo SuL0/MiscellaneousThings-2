@@ -11,6 +11,7 @@ import kr.sul.miscellaneousthings2.something.*
 import kr.sul.miscellaneousthings2.warpgui.WarpGUI
 import kr.sul.miscellaneousthings2.warpgui.data.WarpPlayerDataMgr
 import kr.sul.servercore.util.ObjectInitializer
+import kr.sul.servercore.util.UniqueIdAPI
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -50,6 +51,7 @@ class Main : JavaPlugin(), Listener {
 //        Bukkit.getPluginManager().registerEvents(AreaChat, plugin)
         Bukkit.getPluginManager().registerEvents(WarpGUI, plugin)
         Bukkit.getPluginManager().registerEvents(WarpPlayerDataMgr, plugin)
+        Bukkit.getPluginManager().registerEvents(CombineArmor, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
 
