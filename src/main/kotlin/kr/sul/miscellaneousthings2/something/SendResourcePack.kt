@@ -8,8 +8,8 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerResourcePackStatusEvent
 
 object SendResourcePack: Listener {
-    private const val URL = "https://download.mc-packs.net/pack/42f3b5be6d79477630bd8901a84c9fcae8504320.zip"
-    private const val HASH = "42f3b5be6d79477630bd8901a84c9fcae8504320"
+    private const val URL = "https://download.mc-packs.net/pack/b69c8b238b71e51f603e64525de02c61b1b75a57.zip"
+    private const val HASH = "b69c8b238b71e51f603e64525de02c61b1b75a57"
 
 
     @EventHandler
