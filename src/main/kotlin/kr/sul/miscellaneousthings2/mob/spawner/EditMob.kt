@@ -32,8 +32,10 @@ object EditMob: Listener {
     @EventHandler(priority = EventPriority.HIGH)
     fun stopMobDroppingSomethingOnDeath(e: EntityDeathEvent) {
         if (e.isCancelled) return
-        e.droppedExp = 0
-        e.drops.clear()
+        if (e.entity is Monster) {
+            e.droppedExp = 0
+            e.drops.clear()
+        }
     }
     @EventHandler(priority = EventPriority.HIGH)
     fun stopMobFromPickingUpDroppedItem(e: EntityPickupItemEvent) {
@@ -71,6 +73,7 @@ object EditMob: Listener {
 
 
 
+
     // 포션 효과
     @EventHandler
     fun onMobSpawn(e: EntitySpawnEvent) {
@@ -81,11 +84,13 @@ object EditMob: Listener {
         }
     }
 
-    // NOTE 셜커가 청크 언로드를 Cancel하기에, priority Lowest로 해 두었음
-    @EventHandler(priority = EventPriority.LOWEST)
-    fun onChunkUnload(e: ChunkUnloadEvent) {
-        e.world.entities.filterIsInstance<Zombie>().forEach {
-            it.remove()
-        }
-    }
+    // 플레이어 바로 앞에 있는 청크가 자꾸 언로드 되려 시도돼서, 좀비가 스폰되자 마자 좀비가 제거되는 문제
+//    // NOTE 셜커가 청크 언로드를 Cancel하기에, priority Lowest로 해 두었음
+//    @EventHandler(priority = EventPriority.LOWEST)
+//    fun onChunkUnload(e: ChunkUnloadEvent) {
+//        e.world.entities.filterIsInstance<Zombie>().forEach {
+//            Bukkit.broadcastMessage("kill Entity")
+//            it.remove()
+//        }
+//    }
 }
