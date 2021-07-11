@@ -19,6 +19,8 @@ object AreaChat: Listener {
     fun onChat(e: AsyncPlayerChatEvent) {
         e.isCancelled = true
         val p = e.player
+        p.sendMessage("§c§lCHAT: §7현재 채팅 관리 시스템이 없습니다.  좋은 아이디어가 있다면 건의해 주세요.")
+        return
         val jsonMsg = arrayListOf<TextComponent>().run {
             add(TextComponent("§6[<${CHAT_DISTANCE}M] §f${p.displayName} §f: ${e.message}").run {
                 hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf(TextComponent("§e${p.name} §f에게 귓속말 하기 ")))
@@ -29,11 +31,11 @@ object AreaChat: Listener {
         }
 
         var recieverCnt = 0
-        Bukkit.getOnlinePlayers().filter { it.location.distance(p.location) <= CHAT_DISTANCE && it != p}.forEach {
+        Bukkit.getOnlinePlayers().filter { it.world == p.world && it.location.distance(p.location) <= CHAT_DISTANCE && it != p}.forEach {
             recieverCnt++
             it.sendMessage(*jsonMsg.toTypedArray())
         }
-        jsonMsg.add(TextComponent("   §7§o∽$recieverCnt").run {
+        jsonMsg.add(TextComponent("   §7§o$recieverCnt").run {
             hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf(TextComponent("§7해당 채팅을 수신한 플레이어 수 ")))
             this
         })
