@@ -29,6 +29,7 @@ object EditMob: Listener {
         }
     }
 
+    // 몹 템 드랍 방지
     @EventHandler(priority = EventPriority.HIGH)
     fun stopMobDroppingSomethingOnDeath(e: EntityDeathEvent) {
         if (e.isCancelled) return
@@ -37,10 +38,18 @@ object EditMob: Listener {
             e.drops.clear()
         }
     }
+    // 몹 템 먹기 방지
     @EventHandler(priority = EventPriority.HIGH)
     fun stopMobFromPickingUpDroppedItem(e: EntityPickupItemEvent) {
         if (e.isCancelled) return
         if (e.entity !is Player) {
+            e.isCancelled = true
+        }
+    }
+    // 몹 불타는 것 방지(특히 태양)
+    @EventHandler
+    fun preventMobBurning(e: EntityCombustEvent) {
+        if (e.entity is Monster) {
             e.isCancelled = true
         }
     }
