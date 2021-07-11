@@ -2,6 +2,7 @@ package kr.sul.miscellaneousthings2.warpgui.data
 
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
 import kr.sul.servercore.util.UptimeBasedOnTick
+import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -26,6 +27,12 @@ object WarpPlayerDataMgr: Listener {
     private val dataStorage = hashMapOf<Player, PlayerData>()
 
 
+    // 플러그인 리로드 해도 데이터 터지지 않게끔
+    init {
+        Bukkit.getOnlinePlayers().forEach { p ->
+            loadData(p)
+        }
+    }
 
     private fun loadDataFromFile(p: Player): PlayerData? {
         val uuidStr = p.uniqueId.toString()
@@ -57,15 +64,18 @@ object WarpPlayerDataMgr: Listener {
 
 
 
-    @EventHandler
-    fun onJoin(e: PlayerJoinEvent) {
-        val p = e.player
+    private fun loadData(p: Player) {
         val dataLoadedFromFile = loadDataFromFile(p)
         if (dataLoadedFromFile != null) {
             dataStorage[p] = dataLoadedFromFile
         } else {
             dataStorage[p] = PlayerData(p.uniqueId.toString(), true)
         }
+    }
+    @EventHandler
+    fun onJoin(e: PlayerJoinEvent) {
+        val p = e.player
+        loadData(p)
     }
     @EventHandler
     fun onQuit(e: PlayerQuitEvent) {

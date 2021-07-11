@@ -12,9 +12,9 @@ import org.bukkit.World
 import org.bukkit.inventory.ItemStack
 
 object GuiItems {
-    const val WARP_NAME_KEY = "WarpGui.GuiItems: Name"
+    const val WARP_NAME_KEY = "WarpGui.GuiItems: WarpName"
     const val CHANNEL_KEY = "WarpGui.GuiItems: Channel"
-    const val WORLD_NAME_KEY = "WarpGui.GuiItems: Name"
+    const val WORLD_NAME_KEY = "WarpGui.GuiItems: WorldName"
 
     val normalButton: ItemStack
         get() = ItemStack(Material.SKULL_ITEM, 1, 3).warpName("노말")

@@ -20,6 +20,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.util.Vector
+import kotlin.random.Random
 
 object WarpGUI: Listener {
     private const val IS_GUI_OPENED_METAKEY = "WarpGUI: isGuiOpened"
@@ -125,7 +126,14 @@ object WarpGUI: Listener {
     }
     private fun warp(p: Player, warpName: String, channel: Int, world: World) {
         if (warpName == "노말") {
-            p.teleport(Location(world, 469.5, 70.0, 575.5))
+            when (Random.nextInt(0, 5)) {
+                0 -> p.teleport(Location(world, 469.5, 70.0, 575.5))
+                1 -> p.teleport(Location(world, 487.5, 68.0, 597.5))
+                2 -> p.teleport(Location(world, 444.5, 68.0, 592.5))
+                3 -> p.teleport(Location(world, 444.5, 68.0, 554.5))
+                4 -> p.teleport(Location(world, 492.5, 68.0, 554.5))
+                else -> p.teleport(Location(world, 469.5, 70.0, 575.5))
+            }
             p.sendMessage("§c§lWARP: §f노멀-0$channel §7(으)로 텔레포트 되었습니다.")
         }
 //        else if (warpName == "하드") {
