@@ -11,16 +11,16 @@ repositories {
     mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.dmulloy2.net/repository/public/")
-//    maven("http://repo.citizensnpcs.co/")
+    maven("http://repo.citizensnpcs.co/")
     mavenLocal()
 }
 
 val pluginStorage = "C:/Users/PHR/Desktop/PluginStorage"
+val nmsBukkitPath = "C:/Users/PHR/Desktop/마인즈서버/paper-1.12.2-R0.1-SNAPSHOT-shaded.jar"
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx", "kotlinx-serialization-json", "1.2.2")
-    compileOnly(files("C:/Users/PHR/Desktop/SERVER2/paper-1.12.2-R0.1-SNAPSHOT-shaded.jar"))
-
+    compileOnly(files(nmsBukkitPath))
 
     compileOnly("net.luckperms", "api", "5.3")
     compileOnly("com.comphenix.protocol", "ProtocolLib", "4.6.0")
@@ -31,6 +31,7 @@ dependencies {
     compileOnly(files("$pluginStorage/ServerCore_S.jar"))
     compileOnly(files("$pluginStorage/EnderVaults-Bukkit-v1.0.13.jar"))
     compileOnly(files("$pluginStorage/Dependencies/item-nbt-api-plugin-2.6.0.jar"))
+    compileOnly(files("$pluginStorage/Dependencies/GlowAPI_v1.4.6_S.jar"))
 }
 
 spigot {
