@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.something
+package kr.sul.miscellaneousthings2.something.world
 
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

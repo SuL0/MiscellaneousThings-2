@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.something
+package kr.sul.miscellaneousthings2.something.world
 
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
 import org.bukkit.Bukkit
