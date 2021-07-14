@@ -7,7 +7,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerJoinEvent
 
-object BgmPlayer: Listener {
+object BackgroundMusicPlayer: Listener {
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) {
         if (e.player.world.name.startsWith("Normal")) {

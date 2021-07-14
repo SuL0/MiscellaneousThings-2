@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 
-object GotoSpawnWhenFirstJoin: Listener {
+object TpToSpawnWhenFirstJoin: Listener {
 
     // TODO 너무 대충함
     @EventHandler
