@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.something
+package kr.sul.miscellaneousthings2.something.block
 
 import kr.sul.servercore.util.UptimeBasedOnTick
 import org.bukkit.event.EventHandler

@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.something
+package kr.sul.miscellaneousthings2.something.block
 
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
 import kr.sul.servercore.file.simplylog.LogLevel

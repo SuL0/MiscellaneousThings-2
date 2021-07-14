@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.something
+package kr.sul.miscellaneousthings2.something.block
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

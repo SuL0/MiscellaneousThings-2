@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.something
+package kr.sul.miscellaneousthings2.something.block
 
 import org.bukkit.GameMode
 import org.bukkit.entity.ArmorStand
