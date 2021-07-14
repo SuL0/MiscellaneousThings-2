@@ -52,7 +52,7 @@ object GuiItems {
             .loreIB("&7이날의 도시는 아직까지 형태를 유지하고 있다.", 2)
     val hardTestButton: ItemStack
         get() = ItemStack(Material.RECORD_5, 1).warpName("하드 테스트")
-            .nameIB("&4&l[보스전] &f시련 I 단계")
+            .nameIB("&4&l[보스전] &f시련 I 단계 제 %channel% 실험장")
             .loreIB("&f클릭 시 자동 입장 됩니다.")
             .loreIB("&7&m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m &m")
             .loreIB("&7&l입장 재료: &f &f &f &f &f &f &f &f &f &f &f &f &f &f &7&l보상:")

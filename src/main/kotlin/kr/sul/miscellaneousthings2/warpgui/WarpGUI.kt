@@ -67,9 +67,9 @@ object WarpGUI: Listener {
             inv.setItem(23, GuiItems.lockedButton)
         } else if (!pData.canPlayOnHard) {
             // 하드 테스트장
-            inv.setItem(21, GuiItems.hardTestButton)
-            inv.setItem(22, GuiItems.hardTestButton)
-            inv.setItem(23, GuiItems.hardTestButton)
+            inv.setItem(21, GuiItems.hardTestButton.channel(1))
+            inv.setItem(22, GuiItems.hardTestButton.channel(2))
+            inv.setItem(23, GuiItems.hardTestButton.channel(3))
         } else {
             // 하드
             inv.setItem(21, GuiItems.hardButton.channel(1).world("Hard-1"))
@@ -136,8 +136,13 @@ object WarpGUI: Listener {
             }
             p.sendMessage("§c§lWARP: §f노멀-0$channel §7(으)로 텔레포트 되었습니다.")
         }
-//        else if (warpName == "하드") {
-//
-//        }
+        else if (warpName == "하드 테스트") {
+            when (channel) {
+                1 -> p.teleport(Location(Bukkit.getWorld("HardTest"), 81.5, 95.0, -227.5, -90F, 0F))
+//                2 ->
+//                3 ->
+            }
+            p.sendMessage("§c§lWARP: &f시련 I 단계 제 $channel 실험장 §7(으)로 텔레포트 되었습니다.")
+        }
     }
 }
