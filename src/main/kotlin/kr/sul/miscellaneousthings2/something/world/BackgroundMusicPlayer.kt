@@ -1,5 +1,6 @@
 package kr.sul.miscellaneousthings2.something.world
 
+import goldbigdragon.github.io.util.PlaySound
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -33,12 +34,14 @@ object BackgroundMusicPlayer: Listener {
         }
     }
 
+    // PlaySound.stop(p.name, "records", "record.13")
+    // PlaySound.play(p.uniqueId, "records", "record.far", 1.0F, 15, false)
     private fun stopBgm(p: Player) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rsp ps ${p.name} master normal")
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rsp ps ${p.name} master test01")
+        PlaySound.stop(p.uniqueId, "master", "normal")
+        PlaySound.stop(p.uniqueId, "master", "test01")
     }
     private fun playBgm(p: Player, name: String, time: Int) {
         stopBgm(p)
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rsp p ${p.name} master $name 1 $time true")
+        PlaySound.play(p.uniqueId, "master", name, 1F, time, true)
     }
 }

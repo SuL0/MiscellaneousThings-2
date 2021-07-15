@@ -2,7 +2,6 @@ package kr.sul.miscellaneousthings2.mob.spawner
 
 import de.tr7zw.nbtapi.NBTEntity
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
-import kr.sul.miscellaneousthings2.backgroundmusic.BackgroundMusicPerPlayer
 import kr.sul.servercore.util.ItemBuilder.durabilityIB
 import kr.sul.servercore.util.ItemBuilder.unbreakableIB
 import org.bukkit.Bukkit
@@ -12,7 +11,6 @@ import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
-import org.bukkit.scheduler.BukkitRunnable
 import java.lang.Exception
 import java.util.function.Consumer
 
