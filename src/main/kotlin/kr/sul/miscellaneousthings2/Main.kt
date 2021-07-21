@@ -9,7 +9,9 @@ import kr.sul.miscellaneousthings2.endervaultsaddon.VaultCommand
 import kr.sul.miscellaneousthings2.something.HitAndDash
 import kr.sul.miscellaneousthings2.knockdown.RideTest
 import kr.sul.miscellaneousthings2.mob.spawner.EditMob
+import kr.sul.miscellaneousthings2.mob.spawner.HardZombie
 import kr.sul.miscellaneousthings2.mob.spawner.MobSpawner
+import kr.sul.miscellaneousthings2.mob.spawner.NormalZombie
 import kr.sul.miscellaneousthings2.something.*
 import kr.sul.miscellaneousthings2.something.block.*
 import kr.sul.miscellaneousthings2.something.world.BackgroundMusicPlayer
@@ -75,6 +77,8 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(BlockLeftHand, plugin)
         Bukkit.getPluginManager().registerEvents(SpawnWorldFeatures, plugin)
         Bukkit.getPluginManager().registerEvents(HidePlayersInSpawn, plugin)
+        Bukkit.getPluginManager().registerEvents(NormalZombie, plugin)
+        Bukkit.getPluginManager().registerEvents(HardZombie, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
         ObjectInitializer.forceInit(FixTimeInSomeWorlds::class.java)
