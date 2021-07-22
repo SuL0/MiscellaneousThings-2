@@ -11,7 +11,6 @@ import kr.sul.miscellaneousthings2.knockdown.RideTest
 import kr.sul.miscellaneousthings2.mob.spawner.EditMob
 import kr.sul.miscellaneousthings2.mob.spawner.HardZombie
 import kr.sul.miscellaneousthings2.mob.spawner.MobSpawner
-import kr.sul.miscellaneousthings2.mob.spawner.NormalZombie
 import kr.sul.miscellaneousthings2.something.*
 import kr.sul.miscellaneousthings2.something.block.*
 import kr.sul.miscellaneousthings2.something.world.BackgroundMusicPlayer
@@ -32,6 +31,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
+import xyz.upperlevel.spigot.book.BookUtil
 import java.util.logging.Level
 
 class Main : JavaPlugin(), Listener {
@@ -77,7 +77,6 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(BlockLeftHand, plugin)
         Bukkit.getPluginManager().registerEvents(SpawnWorldFeatures, plugin)
         Bukkit.getPluginManager().registerEvents(HidePlayersInSpawn, plugin)
-        Bukkit.getPluginManager().registerEvents(NormalZombie, plugin)
         Bukkit.getPluginManager().registerEvents(HardZombie, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
@@ -160,6 +159,60 @@ class Main : JavaPlugin(), Listener {
             }
             val inv = Bukkit.createInventory(null, line*9)
             e.player.openInventory(inv)
+        }
+
+        if (e.message == "/book") {
+            e.isCancelled = true
+            val page1 = BookUtil.PageBuilder().add("      §6§l§o§n< 가이드 북 >\n")
+                .add(
+                    BookUtil.TextBuilder.of("\n\n§c§l[여기]").onHover(
+                        BookUtil.HoverAction.showText(
+                            "§c[ §f§l노말에서 살아남기 §c] §f§l- §e§l§o(진행중)\n" +
+                                    "\n§7기록의 문을 넘어 노말 난이도에 입장하세요.\n" +
+                                    "§7입장하신 뒤에 노말 난이도가 쉬워질 때 까지\n" +
+                                    "§7적응 하셔야 합니다.\n\n" +
+                                    "§f§l가디언 §c처치하기 §e20회 §f§l<달성여부: §4✕§f§l>\n" +
+                                    "  §f§l좀비 §c처치하기 §e20회 §f§l<달성여부: §4✕§f§l>\n" +
+                                    "  §f§lScav §c처치하기  §e3회 §f§l<달성여부: §4✕§f§l>\n\n" +
+                                    "        §e§l>> §f§l보상: §e【 §f선별시험자격§e 】"
+                        )
+                    ).build()
+                )
+                .add(BookUtil.TextBuilder.of(" §0▶ 노말에서 살아남기\n").build())
+                .add(
+                    BookUtil.TextBuilder.of("\n\n§c§l[여기]").onHover(
+                        BookUtil.HoverAction.showText(
+                            "§c[ §f§l최종선별 §c] §f§l- §e§l§o(진행중)\n" +
+                                    "\n§7선별시험자격을 얻으셨다면 \n더 이상 노말은 무의미합니다\n" +
+                                    "§7기록의 문을 넘어 시험장에 입장하세요.\n" +
+                                    "§7그곳에 있는 스케브 잔당들을 섬멸하세요\n\n" +
+                                    "§e§l하드선별시험 §f§l통과 §f§l<달성여부: §4✕§f§l>\n\n" +
+                                    "        §e§l>> §f§l보상: §c【 §f하드입장권한§c 】"
+                        )
+                    ).build()
+                )
+                .add(BookUtil.TextBuilder.of(" §0▶ 최종선별\n").build())
+                .add(
+                    BookUtil.TextBuilder.of("\n\n§c§l[여기]").onHover(
+                        BookUtil.HoverAction.showText(
+                            "§c[ §f§l하드에서 살아남기 §c] §f§l- §e§l§o(진행중)\n" +
+                                    "\n§7더 이상의 안내 지침은 필요없습니다!\n" +
+                                    "§7필요한 과정을 모두 거치셨으며 \n하드로 떠나셔도 좋습니다\n" +
+                                    "§7자유롭게 파티를 맺어 \nFPS 약탈을 즐겨주시길 바랍니다\n\n§a감사합니다 ◠‿◠ - 서버일동 -\n\n" +
+                                    "§c【 §f하드입장권한§c 】 §f§l획득 §f§l<달성여부: §4✕§f§l>\n\n" +
+                                    "        §e§l>> §f§l보상: §2【 §f빛나는 보물상자§2 】"
+                        )
+                    ).build()
+                )
+                .add(BookUtil.TextBuilder.of(" §0▶ 하드에서 살아남기\n").build())
+
+                .build() // 페이지 빌드
+
+
+            val bookItem = BookUtil.writtenBook()
+                .author("Server").title("§a§l§o가이드북")
+                .pages(page1)
+                .build()
         }
     }
     private fun parseIntToTwoDigitStr(i: Int): String {
