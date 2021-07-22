@@ -12,6 +12,7 @@ repositories {
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.dmulloy2.net/repository/public/")
     maven("http://repo.citizensnpcs.co/")
+    maven("https://repo.md-5.net/content/groups/public/")
     mavenLocal()
 }
 
@@ -25,6 +26,7 @@ dependencies {
     compileOnly("net.luckperms", "api", "5.3")
     compileOnly("com.comphenix.protocol", "ProtocolLib", "4.6.0")
     compileOnly("net.citizensnpcs", "citizensapi", "2.0.28-SNAPSHOT")
+    compileOnly("LibsDisguises", "LibsDisguises", "10.0.26")
 //    compileOnly("net.citizensnpcs", "citizens-main", "2.0.28-SNAPSHOT")
 
     compileOnly(files("$pluginStorage/ResourcepackSoundPlayer_S.jar"))
@@ -32,6 +34,7 @@ dependencies {
     compileOnly(files("$pluginStorage/EnderVaults-Bukkit-v1.0.13.jar"))
     compileOnly(files("$pluginStorage/Dependencies/item-nbt-api-plugin-2.6.0.jar"))
     compileOnly(files("$pluginStorage/Dependencies/GlowAPI_v1.4.6_S.jar"))
+    compileOnly(files("$pluginStorage/Dependencies/LibsDisguises-10.0.26-Free.jar"))
 }
 
 spigot {

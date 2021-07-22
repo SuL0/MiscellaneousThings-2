@@ -91,6 +91,8 @@ enum class SpawnerMobInfo(val habitatBlockType: Material, private val howToSpawn
             ent.equipment.chestplate = null
             ent.equipment.leggings = null
             ent.equipment.boots = null
+            ent.equipment.itemInMainHand = null
+            ent.equipment.itemInOffHand = null
         }
     }
 }

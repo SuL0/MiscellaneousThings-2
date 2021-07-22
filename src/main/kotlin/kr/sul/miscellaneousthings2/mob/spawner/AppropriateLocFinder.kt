@@ -33,7 +33,6 @@ object AppropriateLocFinder {
 
 
     // TODO: 지면의 y를 설정하고, 플레이어가 지면보다 아래에 있으면 blockType을 찾을 때 기준 좌표에서 위로만 찾고, 플레이어가 지면보다 위에 있으면 기준 좌표에서 아래만 찾으면 더 좋을 것 같은데?
-    // TODO 대상 블럭 위 두칸이 공기인지 확인
     private fun tryToFind(centerPoint: Location, blockTypes: List<Material>): Location? {
         // 랜덤하게 8~15칸 만큼 떨어진 좌표
         val randomLength = random.nextInt(8, 15+1)  // 8~15
