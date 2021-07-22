@@ -1,6 +1,8 @@
 package kr.sul.miscellaneousthings2.something.world.spawn
 
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
+import kr.sul.servercore.extensionfunction.WorldPlayers.getRealPlayers
+import kr.sul.servercore.extensionfunction.WorldPlayers.getRealPlayersExcept
 import kr.sul.servercore.util.ClassifyWorlds
 import kr.sul.servercore.util.PlayerDistance.distance
 import org.bukkit.Bukkit
@@ -16,10 +18,12 @@ object HidePlayersInSpawn: Listener {
     private val showingMap = hashMapOf<Player, ArrayList<Player>>()  // 스폰에서 Key가 볼 수 있는 플레이어 목록
     private const val DISTANCE = 10
 
+    // Citizen NPC는 월드가 로딩될 때 약 1초간 서버에 존재하다가, 없는 플레이어 처리됨 (그래서 world.players에서 약 1초간 NPC가 Player로 인식돼서 뜰 수 있음)
     init {
         Bukkit.getScheduler().runTaskTimer(plugin, {
             for (spawnWorld in ClassifyWorlds.spawnWorlds) {
-                for (p in spawnWorld.players) {
+                for (p in spawnWorld.getRealPlayers()) {
+
                     // showed 에 있는 Values(플레이어들) 이 조건을 충족하고 있는지 확인
                     if (showingMap.containsKey(p)) {
                         val toRemove = arrayListOf<Player>()
@@ -34,7 +38,7 @@ object HidePlayersInSpawn: Listener {
                     }
 
                     // 주변 플레이어는 show
-                    for (nearbyP in spawnWorld.players.filter { it != p && it.distance(p) <= DISTANCE }) {
+                    for (nearbyP in spawnWorld.getRealPlayersExcept(p).filter { it.distance(p) <= DISTANCE }) {
                         if (!showingMap.containsKey(p)) {
                             showingMap[p] = arrayListOf()
                         }
@@ -77,7 +81,7 @@ object HidePlayersInSpawn: Listener {
         }
     }
     private fun onArrivedAtSpawn(p: Player) {
-        p.world.players.filter { it != p }.forEach { loopP ->
+        p.world.getRealPlayersExcept(p).forEach { loopP ->
             p.hidePlayer(plugin, loopP)
             loopP.hidePlayer(plugin, p)
         }
