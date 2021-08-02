@@ -3,6 +3,7 @@ package kr.sul.miscellaneousthings2
 import kr.sul.miscellaneousthings2.chat.AreaChat
 import kr.sul.miscellaneousthings2.chat.ChatInSpawn
 import kr.sul.miscellaneousthings2.command.KillAllCommand
+import kr.sul.miscellaneousthings2.command.EconomyCommand
 import kr.sul.miscellaneousthings2.command.NbtViewCommand
 import kr.sul.miscellaneousthings2.endervaultsaddon.SelectorListener
 import kr.sul.miscellaneousthings2.endervaultsaddon.VaultCommand
@@ -76,13 +77,15 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(HitAndDash, plugin)
         Bukkit.getPluginManager().registerEvents(BlockLeftHand, plugin)
         Bukkit.getPluginManager().registerEvents(SpawnWorldFeatures, plugin)
-        Bukkit.getPluginManager().registerEvents(HidePlayersInSpawn, plugin)
+//        Bukkit.getPluginManager().registerEvents(HidePlayersInSpawn, plugin)
         Bukkit.getPluginManager().registerEvents(HardZombie, plugin)
+        Bukkit.getPluginManager().registerEvents(GlowAllPlayersInNormal, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
         ObjectInitializer.forceInit(FixTimeInSomeWorlds::class.java)
 
         getCommand("nbtview").executor = NbtViewCommand
+        getCommand("돈").executor = EconomyCommand
 
         // TODO FOr TEST!
         Bukkit.getPluginManager().registerEvents(this, plugin)

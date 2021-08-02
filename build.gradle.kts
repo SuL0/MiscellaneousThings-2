@@ -23,15 +23,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx", "kotlinx-serialization-json", "1.2.2")
     compileOnly(files(nmsBukkitPath))
 
-    compileOnly("net.luckperms", "api", "5.3")
-    compileOnly("com.comphenix.protocol", "ProtocolLib", "4.6.0")
-    compileOnly("net.citizensnpcs", "citizensapi", "2.0.28-SNAPSHOT")
     compileOnly("LibsDisguises", "LibsDisguises", "10.0.26")
 //    compileOnly("net.citizensnpcs", "citizens-main", "2.0.28-SNAPSHOT")
 
-    compileOnly(files("$pluginStorage/ResourcepackSoundPlayer_S.jar"))
     compileOnly(files("$pluginStorage/ServerCore_S.jar"))
     compileOnly(files("$pluginStorage/EnderVaults-Bukkit-v1.0.13.jar"))
+    compileOnly(files("$pluginStorage/Parachute_S.jar"))
     compileOnly(files("$pluginStorage/Dependencies/item-nbt-api-plugin-2.6.0.jar"))
     compileOnly(files("$pluginStorage/Dependencies/GlowAPI_v1.4.6_S.jar"))
     compileOnly(files("$pluginStorage/Dependencies/LibsDisguises-10.0.26-Free.jar"))
@@ -48,6 +45,7 @@ spigot {
             permission = "op.op"
             description = "아이템의 특정 NBT 값을 확인합니다."
         }
+        create("돈")
     }
 }
 
