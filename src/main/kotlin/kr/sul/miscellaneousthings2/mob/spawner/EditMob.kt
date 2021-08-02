@@ -2,6 +2,9 @@ package kr.sul.miscellaneousthings2.mob.spawner
 
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
+import kr.sul.servercore.ServerCore.Companion.economy
+import kr.sul.servercore.ServerCore.Companion.isEconomyEnabled
+import kr.sul.servercore.util.ClassifyWorlds
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.entity.Monster
@@ -52,6 +55,14 @@ object EditMob: Listener {
             e.isCancelled = true
         }
     }
+    // 좀비 압사하려 하면 블럭 -> 좀비 방향으로 밀어내기
+    @EventHandler(priority = EventPriority.HIGH)
+    fun pushZombieWhenIfSuffos(e: EntityDamageByBlockEvent) {
+        if (e.isCancelled) return
+        if (e.entity is Zombie && e.cause == EntityDamageEvent.DamageCause.SUFFOCATION) {
+            e.entity.velocity = e.entity.location.toVector().subtract(e.damager.location.toVector())
+        }
+    }
 
     // 넉백 A (Easy)
     @EventHandler
@@ -85,10 +96,8 @@ object EditMob: Listener {
     // 포션 효과
     @EventHandler
     fun onMobSpawn(e: EntitySpawnEvent) {
-        if (e.entity is Zombie) {
-            if (e.location.world.name.startsWith("Hard")) {
-                (e.entity as Zombie).addPotionEffect(PotionEffect(PotionEffectType.SPEED, 1000000, 1, true, false))
-            }
+        if (e.entity is Zombie && ClassifyWorlds.hardWorlds.contains(e.location.world)) {
+            (e.entity as Zombie).addPotionEffect(PotionEffect(PotionEffectType.SPEED, 1000000, 1, true, false))
         }
     }
 
@@ -101,4 +110,24 @@ object EditMob: Listener {
 //            it.remove()
 //        }
 //    }
+
+
+    // TODO 테섭용
+    // 체력 *3
+    @EventHandler(priority = EventPriority.LOW)
+    fun onZombieDamage(e: EntityDamageEvent) {
+        if (e.isCancelled) return
+        if (e.entity is Zombie && ClassifyWorlds.normalWorlds.contains(e.entity.world)) {
+            e.damage = e.damage/3.0
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGH)
+    fun onZombieDeath(e: EntityDeathEvent) {
+        if (e.isCancelled) return
+        if (!isEconomyEnabled) return
+        if (e.entity is Zombie && ClassifyWorlds.normalWorlds.contains(e.entity.world)) {
+            e.entity.killer.sendTitle("", "           §a+5,000원", 2, 7, 6)
+            economy.depositPlayer(e.entity.killer, 5000.toDouble())
+        }
+    }
 }

@@ -5,6 +5,7 @@ import kr.sul.miscellaneousthings2.warpgui.GuiItems.channel
 import kr.sul.miscellaneousthings2.warpgui.GuiItems.world
 import kr.sul.miscellaneousthings2.warpgui.data.WarpPlayerDataMgr
 import kr.sul.servercore.nbtapi.NbtItem
+import kr.sul.servercore.something.BossBarTimer
 import kr.sul.servercore.util.ClassifyWorlds
 import kr.sul.servercore.util.ItemBuilder.nameIB
 import kr.sul.servercore.util.ItemBuilder.unbreakableIB
@@ -12,6 +13,8 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
+import org.bukkit.boss.BarColor
+import org.bukkit.boss.BarStyle
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -19,8 +22,9 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.metadata.FixedMetadataValue
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
-import kotlin.random.Random
 
 object WarpGUI: Listener {
     private const val IS_GUI_OPENED_METAKEY = "WarpGUI: isGuiOpened"
@@ -126,15 +130,21 @@ object WarpGUI: Listener {
     }
     private fun warp(p: Player, warpName: String, channel: Int, world: World) {
         if (warpName == "노말") {
-            when (Random.nextInt(0, 5)) {
-                0 -> p.teleport(Location(world, 469.5, 70.0, 575.5))
-                1 -> p.teleport(Location(world, 487.5, 68.0, 597.5))
-                2 -> p.teleport(Location(world, 444.5, 68.0, 592.5))
-                3 -> p.teleport(Location(world, 444.5, 68.0, 554.5))
-                4 -> p.teleport(Location(world, 492.5, 68.0, 554.5))
-                else -> p.teleport(Location(world, 469.5, 70.0, 575.5))
-            }
+            p.teleport(Location(world, 469.5, 70.0, 575.5))
             p.sendMessage("§c§lWARP: §f노멀-0$channel §7(으)로 텔레포트 되었습니다.")
+
+            // TODO 테섭용 무적 15초
+            val bossBarTitleLambda: (Int) -> (String) = { leftTime ->
+                val leftTimeStr = run {
+                    val min = parseIntToTwoDigitStr(leftTime/60)
+                    val sec = parseIntToTwoDigitStr(leftTime%60)
+                    "§c§l${min}§7분 §c§l${sec}§7초"
+                }
+                "§d§l무적: §f남은시간 $leftTimeStr"
+            }
+            BossBarTimer.setTimer(p, 15, bossBarTitleLambda, BarColor.PURPLE, BarStyle.SOLID)
+            p.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE)
+            p.addPotionEffect(PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 15*20, 250, false, false))
         }
         else if (warpName == "하드 테스트") {
             when (channel) {
@@ -144,5 +154,12 @@ object WarpGUI: Listener {
             }
             p.sendMessage("§c§lWARP: &f시련 I 단계 제 $channel 실험장 §7(으)로 텔레포트 되었습니다.")
         }
+    }
+
+    private fun parseIntToTwoDigitStr(i: Int): String {
+        if (i < 10) {
+            return "0$i"
+        }
+        return "$i"
     }
 }
