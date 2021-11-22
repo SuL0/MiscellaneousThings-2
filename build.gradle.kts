@@ -2,6 +2,8 @@ plugins {
     kotlin("jvm") version "1.5.20"
     kotlin("plugin.serialization") version "1.5.20"
     id("kr.entree.spigradle") version "2.2.3"
+    `java-library`
+    `maven-publish`
 }
 
 group = "kr.sul"
@@ -16,22 +18,24 @@ repositories {
     mavenLocal()
 }
 
-val pluginStorage = "C:/Users/PHR/Desktop/PluginStorage"
-val nmsBukkitPath = "C:/Users/PHR/Desktop/마인즈서버/paper-1.12.2-R0.1-SNAPSHOT-shaded.jar"
+val pluginStorage = "C:/MC-Development/PluginStorage"
+val nmsBukkitPath = "C:/MC-Development/마인즈서버/paper-1.12.2-R0.1-SNAPSHOT-shaded.jar"
+val copyPluginDestination = "C:/MC-Development/마인즈서버/plugins"
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx", "kotlinx-serialization-json", "1.2.2")
     compileOnly(files(nmsBukkitPath))
 
-    compileOnly("LibsDisguises", "LibsDisguises", "10.0.26")
-//    compileOnly("net.citizensnpcs", "citizens-main", "2.0.28-SNAPSHOT")
-
+    // ServerCore ShadowJar - ㄴㄴ 플러그인은 Shadow 할 생각 없음
+    compileOnly("net.citizensnpcs", "citizens-main", "2.0.28-SNAPSHOT")
+    compileOnly("net.luckperms", "api", "5.3")
+    compileOnly("com.github.MilkBowl","VaultAPI", "1.7")
     compileOnly(files("$pluginStorage/ServerCore_S.jar"))
-    compileOnly(files("$pluginStorage/EnderVaults-Bukkit-v1.0.13.jar"))
     compileOnly(files("$pluginStorage/Parachute_S.jar"))
-    compileOnly(files("$pluginStorage/Dependencies/item-nbt-api-plugin-2.6.0.jar"))
-    compileOnly(files("$pluginStorage/Dependencies/GlowAPI_v1.4.6_S.jar"))
-    compileOnly(files("$pluginStorage/Dependencies/LibsDisguises-10.0.26-Free.jar"))
+    compileOnly(files("$pluginStorage/EnderVaults-Bukkit-v1.0.13.jar"))
+//    compileOnly(files("$pluginStorage/Parachute_S.jar"))
+
+    compileOnly(fileTree("$pluginStorage/LibrariesFor122Development").matching { include("*.jar") })
 }
 
 spigot {
@@ -46,6 +50,7 @@ spigot {
             description = "아이템의 특정 NBT 값을 확인합니다."
         }
         create("돈")
+        create("나침반")
     }
 }
 
@@ -56,13 +61,33 @@ tasks {
 
     val copyPlugin = register<Copy>("copyPlugin") {
         from(files("$pluginStorage/${project.name}_S.jar"))
-        into(file("C:/Users/PHR/Desktop/마인즈서버/plugins"))
+        into(file("${copyPluginDestination}"))
     }
 
     jar {
         archiveFileName.set("${project.name}_S.jar")
         destinationDirectory.set(file(pluginStorage))
-
         finalizedBy(copyPlugin)
+    }
+
+    javadoc {
+        source = sourceSets.main.get().allJava
+        classpath = configurations.compile.get()
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+// jar task 에 finalizedBy로 추가
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = rootProject.group as String
+            version = rootProject.version as String
+            from(components["java"])
+        }
     }
 }
