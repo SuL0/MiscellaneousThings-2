@@ -10,15 +10,14 @@ import kr.sul.miscellaneousthings2.endervaultsaddon.VaultCommand
 import kr.sul.miscellaneousthings2.something.HitAndDash
 import kr.sul.miscellaneousthings2.knockdown.RideTest
 import kr.sul.miscellaneousthings2.mob.spawner.EditMob
-import kr.sul.miscellaneousthings2.mob.spawner.HardZombie
 import kr.sul.miscellaneousthings2.mob.spawner.MobSpawner
+import kr.sul.miscellaneousthings2.mob.spawner.TestZombie
 import kr.sul.miscellaneousthings2.something.*
 import kr.sul.miscellaneousthings2.something.block.*
 import kr.sul.miscellaneousthings2.something.world.BackgroundMusicPlayer
 import kr.sul.miscellaneousthings2.something.world.FixTimeInSomeWorlds
 import kr.sul.miscellaneousthings2.something.world.spawn.SpawnWorldFeatures
 import kr.sul.miscellaneousthings2.something.world.TpToSpawnWhenFirstJoin
-import kr.sul.miscellaneousthings2.something.world.spawn.HidePlayersInSpawn
 import kr.sul.miscellaneousthings2.warpgui.WarpGUI
 import kr.sul.miscellaneousthings2.warpgui.data.WarpPlayerDataMgr
 import kr.sul.servercore.something.BossBarTimer
@@ -78,14 +77,19 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(BlockLeftHand, plugin)
         Bukkit.getPluginManager().registerEvents(SpawnWorldFeatures, plugin)
 //        Bukkit.getPluginManager().registerEvents(HidePlayersInSpawn, plugin)
-        Bukkit.getPluginManager().registerEvents(HardZombie, plugin)
-        Bukkit.getPluginManager().registerEvents(GlowAllPlayersInNormal, plugin)
+//        Bukkit.getPluginManager().registerEvents(HardZombie, plugin)
+//        Bukkit.getPluginManager().registerEvents(GlowAllPlayersInNormal, plugin)
+        Bukkit.getPluginManager().registerEvents(MeleeAttackMechanism, plugin)
+        Bukkit.getPluginManager().registerEvents(TestZombie, plugin)
+        Bukkit.getPluginManager().registerEvents(WarpWithCompass, plugin)
+        Bukkit.getPluginManager().registerEvents(ArmorWeight, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
         ObjectInitializer.forceInit(FixTimeInSomeWorlds::class.java)
 
         getCommand("nbtview").executor = NbtViewCommand
         getCommand("돈").executor = EconomyCommand
+        getCommand("나침반").executor = WarpWithCompass
 
         // TODO FOr TEST!
         Bukkit.getPluginManager().registerEvents(this, plugin)
