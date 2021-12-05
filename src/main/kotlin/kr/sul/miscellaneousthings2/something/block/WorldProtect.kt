@@ -15,17 +15,17 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 
 
-object WorldGuard: Listener {
+object WorldProtect: Listener {
 
     // | 블럭 관련
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun onBlockPlace(e: BlockPlaceEvent) {
-        if (e.player.isOp && e.player.gameMode == GameMode.CREATIVE) return
+        if (isInWorldProtectBypassMode(e.player)) return
         e.isCancelled = true
     }
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun onBlockBreak(e: BlockBreakEvent) {
-        if (e.player.isOp && e.player.gameMode == GameMode.CREATIVE) return
+        if (isInWorldProtectBypassMode(e.player)) return
         e.isCancelled = true
     }
 
@@ -38,7 +38,7 @@ object WorldGuard: Listener {
     // 이건, 내가 총을 쏴서 맞춰도 e.remover 이 플레이어로 뜸
     @EventHandler(priority = EventPriority.HIGH)
     fun onHangingBreakByEntity(e: HangingBreakByEntityEvent) {
-        if (e.remover is Player && (e.remover as Player).gameMode == GameMode.CREATIVE && e.remover.isOp) return
+        if (e.remover is Player && isInWorldProtectBypassMode(e.remover as Player)) return
 
         e.isCancelled = true
     }
@@ -47,7 +47,7 @@ object WorldGuard: Listener {
     @EventHandler
     fun onFrameDamage(e: EntityDamageByEntityEvent) {
         if (e.entity is Hanging) {
-            if (e.damager is Player && (e.damager as Player).gameMode == GameMode.CREATIVE && e.damager.isOp) return
+            if (e.damager is Player && isInWorldProtectBypassMode(e.damager as Player)) return
 
             e.isCancelled = true
         }
@@ -60,8 +60,7 @@ object WorldGuard: Listener {
     @EventHandler(priority = EventPriority.LOW)
     fun preventBreaking(e: EntityDamageByEntityEvent) {
         if (e.entity is ArmorStand) {
-            if (e.damager is Player && e.damager.isOp
-                && (e.damager as Player).gameMode == GameMode.CREATIVE) {
+            if (e.damager is Player && isInWorldProtectBypassMode(e.damager as Player)) {
                 return
             }
 
@@ -78,11 +77,15 @@ object WorldGuard: Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     fun preventStealingItem(e: PlayerInteractAtEntityEvent) {
         if (e.rightClicked is ArmorStand) {
-            if (e.player.isOp && e.player.gameMode == GameMode.CREATIVE) {
+            if (isInWorldProtectBypassMode(e.player)) {
                 return
             }
             e.isCancelled = true
         }
+    }
+
+    fun isInWorldProtectBypassMode(p: Player): Boolean {
+        return (p.isOp && p.gameMode == GameMode.CREATIVE)
     }
 }
 
