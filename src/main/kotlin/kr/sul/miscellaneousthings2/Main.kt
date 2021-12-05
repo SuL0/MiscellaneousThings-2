@@ -52,12 +52,10 @@ class Main : JavaPlugin(), Listener {
 
     private fun registerClasses() {
         Bukkit.getPluginManager().registerEvents(StopServerJoinTooEarly, plugin)
-        Bukkit.getPluginManager().registerEvents(StopProjectileFromBreakingHanging, plugin)
         Bukkit.getPluginManager().registerEvents(TakeAwayPermissionIfNotOp, plugin)
         Bukkit.getPluginManager().registerEvents(SendResourcePack, plugin)
         Bukkit.getPluginManager().registerEvents(KillAllCommand, plugin)
         Bukkit.getPluginManager().registerEvents(EditMob, plugin)
-        Bukkit.getPluginManager().registerEvents(PreventArmorstandFromBreaking, plugin)
         Bukkit.getPluginManager().registerEvents(InvalidateSomeHealAndDamage, plugin)
         Bukkit.getPluginManager().registerEvents(ChatInSpawn, plugin)
         Bukkit.getPluginManager().registerEvents(RideTest, plugin)
@@ -83,9 +81,12 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(TestZombie, plugin)
         Bukkit.getPluginManager().registerEvents(WarpWithCompass, plugin)
         Bukkit.getPluginManager().registerEvents(ArmorWeight, plugin)
+        Bukkit.getPluginManager().registerEvents(BlueberryInBush, plugin)
+        Bukkit.getPluginManager().registerEvents(WorldProtect, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
         ObjectInitializer.forceInit(FixTimeInSomeWorlds::class.java)
+        ObjectInitializer.forceInit(AutoReload::class.java)
 
         getCommand("nbtview").executor = NbtViewCommand
         getCommand("돈").executor = EconomyCommand
