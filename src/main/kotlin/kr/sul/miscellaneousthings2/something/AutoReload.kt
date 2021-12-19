@@ -1,7 +1,7 @@
 package kr.sul.miscellaneousthings2.something
 
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
-import kr.sul.miscellaneousthings2.something.AutoReload.pluginsFolder
+import kr.sul.servercore.util.MsgPrefix
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
 import java.io.File
@@ -64,7 +64,7 @@ object AutoReload {
                                 Bukkit.getServer()
                                     .dispatchCommand(Bukkit.getConsoleSender(), "plugman reload $pluginName")
                             }
-                        sendMessageToOpPlayers("Successfully reloaded $pluginName!")
+                        sendMessageToOpPlayers("${MsgPrefix.get("AUTORELOAD")}§a$pluginName §f리로드 됨")
                         timeSinceLastChanged.remove(fileName)
                         timeSinceLastChanged[fileName] = listOfFiles[i].lastModified()
                     }
@@ -77,7 +77,6 @@ object AutoReload {
         val listOfFiles: Array<File> = pluginsFolder.listFiles()!!
         for (i in listOfFiles.indices) {
             if (listOfFiles[i].isFile && listOfFiles[i].name.endsWith(".jar")) {
-                sendMessageToOpPlayers("Found plugin " + listOfFiles[i].name)
                 timeSinceLastChanged[listOfFiles[i].name] = listOfFiles[i].lastModified()
             }
         }
