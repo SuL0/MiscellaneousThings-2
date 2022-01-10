@@ -64,7 +64,7 @@ object AutoReload {
                                 Bukkit.getServer()
                                     .dispatchCommand(Bukkit.getConsoleSender(), "plugman reload $pluginName")
                             }
-                        sendMessageToOpPlayers("${MsgPrefix.get("AUTORELOAD")}§a$pluginName §f리로드 됨")
+                        sendMessageToOpPlayers("${MsgPrefix.get("RELOAD")}§a$pluginName §f리로드")
                         timeSinceLastChanged.remove(fileName)
                         timeSinceLastChanged[fileName] = listOfFiles[i].lastModified()
                     }
