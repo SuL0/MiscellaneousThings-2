@@ -2,6 +2,7 @@ package kr.sul.miscellaneousthings2
 
 import kr.sul.miscellaneousthings2.chat.AreaChat
 import kr.sul.miscellaneousthings2.chat.ChatInSpawn
+import kr.sul.miscellaneousthings2.combatlog.CombatLog
 import kr.sul.miscellaneousthings2.command.KillAllCommand
 import kr.sul.miscellaneousthings2.command.EconomyCommand
 import kr.sul.miscellaneousthings2.command.NbtViewCommand
@@ -18,6 +19,7 @@ import kr.sul.miscellaneousthings2.something.world.BackgroundMusicPlayer
 import kr.sul.miscellaneousthings2.something.world.FixTimeInSomeWorlds
 import kr.sul.miscellaneousthings2.something.world.spawn.SpawnWorldFeatures
 import kr.sul.miscellaneousthings2.something.world.TpToSpawnWhenFirstJoin
+import kr.sul.miscellaneousthings2.tutorial.TutorialPlayer
 import kr.sul.miscellaneousthings2.warpgui.WarpGUI
 import kr.sul.miscellaneousthings2.warpgui.data.WarpPlayerDataMgr
 import kr.sul.servercore.something.BossBarTimer
@@ -79,18 +81,22 @@ class Main : JavaPlugin(), Listener {
 //        Bukkit.getPluginManager().registerEvents(GlowAllPlayersInNormal, plugin)
         Bukkit.getPluginManager().registerEvents(MeleeAttackMechanism, plugin)
         Bukkit.getPluginManager().registerEvents(TestZombie, plugin)
-        Bukkit.getPluginManager().registerEvents(WarpWithCompass, plugin)
+        Bukkit.getPluginManager().registerEvents(WarpHelperInSpawn, plugin)
         Bukkit.getPluginManager().registerEvents(ArmorWeight, plugin)
         Bukkit.getPluginManager().registerEvents(BlueberryInBush, plugin)
         Bukkit.getPluginManager().registerEvents(WorldProtect, plugin)
+        Bukkit.getPluginManager().registerEvents(PlayerJoinMessage, plugin)
+        Bukkit.getPluginManager().registerEvents(DebugCommand, plugin)
+        Bukkit.getPluginManager().registerEvents(CombatLog, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
         ObjectInitializer.forceInit(FixTimeInSomeWorlds::class.java)
         ObjectInitializer.forceInit(AutoReload::class.java)
 
+
         getCommand("nbtview").executor = NbtViewCommand
         getCommand("돈").executor = EconomyCommand
-        getCommand("나침반").executor = WarpWithCompass
+        getCommand("인사하기").executor = PlayerJoinMessage
 
         // TODO FOr TEST!
         Bukkit.getPluginManager().registerEvents(this, plugin)
@@ -222,6 +228,14 @@ class Main : JavaPlugin(), Listener {
                 .pages(page1)
                 .build()
         }
+        if (e.message == "/tutorial") {
+            e.isCancelled = true
+            TutorialPlayer(e.player)
+        }
+        if (e.message == "/testmob") {
+            e.isCancelled = true
+            NpcTest.run(e.player)
+        }
     }
     private fun parseIntToTwoDigitStr(i: Int): String {
         if (i < 10) {
@@ -230,3 +244,4 @@ class Main : JavaPlugin(), Listener {
         return "$i"
     }
 }
+
