@@ -1,10 +1,6 @@
 package kr.sul.miscellaneousthings2.mob.spawner
 
-import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
-import kr.sul.servercore.ServerCore.Companion.economy
-import kr.sul.servercore.ServerCore.Companion.isEconomyEnabled
-import kr.sul.servercore.util.ClassifyWorlds
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.entity.Monster
@@ -14,8 +10,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.*
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
 
 object EditMob: Listener {
     private val AKnockbackWorlds = arrayListOf<World>()
@@ -64,7 +58,8 @@ object EditMob: Listener {
         }
     }
 
-    // 넉백 A (Easy)
+    /*
+    // 넉백 A (Easy)  조금 밀리는 넉백
     @EventHandler
     fun onMonsterDamaged(e: EntityDamageByEntityEvent) {
         if (e.entity is Monster && e.damager is Player) {
@@ -76,7 +71,7 @@ object EditMob: Listener {
         }
     }
 
-    // 넉백 B (Hard)
+    // 넉백 B (Hard)  떳다가 내리꼽는 넉백
     @EventHandler
     fun onMonsterKnockback(e: EntityKnockbackByEntityEvent) {
         if (e.entity is Monster
@@ -87,19 +82,9 @@ object EditMob: Listener {
                 e.entity.velocity = e.hitBy.location.direction.multiply(MobSpawnerConfig.BKnockbackStrength)
             }
         }
-    }
+    }*/
 
 
-
-
-
-    // 포션 효과
-    @EventHandler
-    fun onMobSpawn(e: EntitySpawnEvent) {
-        if (e.entity is Zombie && ClassifyWorlds.hardWorlds.contains(e.location.world)) {
-            (e.entity as Zombie).addPotionEffect(PotionEffect(PotionEffectType.SPEED, 1000000, 1, true, false))
-        }
-    }
 
     // 플레이어 바로 앞에 있는 청크가 자꾸 언로드 되려 시도돼서, 좀비가 스폰되자 마자 좀비가 제거되는 문제
 //    // NOTE 셜커가 청크 언로드를 Cancel하기에, priority Lowest로 해 두었음
@@ -111,23 +96,13 @@ object EditMob: Listener {
 //        }
 //    }
 
-
-    // TODO 테섭용
-    // 체력 *3
-    @EventHandler(priority = EventPriority.LOW)
-    fun onZombieDamage(e: EntityDamageEvent) {
-        if (e.isCancelled) return
-        if (e.entity is Zombie && ClassifyWorlds.normalWorlds.contains(e.entity.world)) {
-            e.damage = e.damage/3.0
-        }
-    }
-    @EventHandler(priority = EventPriority.HIGH)
-    fun onZombieDeath(e: EntityDeathEvent) {
-        if (e.isCancelled) return
-        if (!isEconomyEnabled) return
-        if (e.entity is Zombie && ClassifyWorlds.normalWorlds.contains(e.entity.world)) {
-            e.entity.killer.sendTitle("", "           §a+5,000원", 2, 7, 6)
-            economy.depositPlayer(e.entity.killer, 5000.toDouble())
-        }
-    }
+//    @EventHandler(priority = EventPriority.HIGH)
+//    fun onZombieDeath(e: EntityDeathEvent) {
+//        if (e.isCancelled) return
+//        if (!isEconomyEnabled) return
+//        if (e.entity is Zombie) {
+//            e.entity.killer.sendTitle("", "           §a+5,000원", 2, 7, 6)
+//            economy.depositPlayer(e.entity.killer, 5000.toDouble())
+//        }
+//    }
 }

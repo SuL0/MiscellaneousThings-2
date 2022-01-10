@@ -97,20 +97,23 @@ object RaiderWithBook: Listener {
             openRaiderBook(e.player)
         }
     }
-    @EventHandler
-    fun onJoin(e: PlayerJoinEvent) {
-        val p = e.player
-        val pInv = e.player.inventory
-        if (pInv.getItem(8) != null && pInv.getItem(8).isSimilar(bookItem)) {  // 만약 8번 슬롯에 무언가 아이템이 있는 경우, 해당 아이템을 옮겨줌
-            val itemToMove = pInv.getItem(8)
-            if (pInv.firstEmpty() != -1) {  // 인벤이 꽉차지 않았을 때
-                pInv.addItem(itemToMove)
-            } else {
-                p.world.dropItem(p.location, itemToMove)
-            }
-        }
-        pInv.setItem(8, bookItem)
-    }
+
+
+    // 인벤 9번에 나침반 주는 것 비활성화
+//    @EventHandler
+//    fun onJoin(e: PlayerJoinEvent) {
+//        val p = e.player
+//        val pInv = e.player.inventory
+//        if (pInv.getItem(8) != null && !pInv.getItem(8).isSimilar(bookItem)) {  // 만약 8번 슬롯에 무언가 아이템이 있는 경우, 해당 아이템을 옮겨줌
+//            val itemToMove = pInv.getItem(8)
+//            if (pInv.firstEmpty() != -1) {  // 인벤이 꽉차지 않았을 때
+//                pInv.addItem(itemToMove)
+//            } else {
+//                p.world.dropItem(p.location, itemToMove)
+//            }
+//        }
+//        pInv.setItem(8, bookItem)
+//    }
     @EventHandler(priority = EventPriority.LOW)
     fun onInvClick(e: InventoryClickEvent) {
         if (e.isCancelled) return

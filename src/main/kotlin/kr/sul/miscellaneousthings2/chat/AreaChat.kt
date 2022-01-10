@@ -17,6 +17,7 @@ object AreaChat: Listener {
 
     @EventHandler
     fun onChat(e: AsyncPlayerChatEvent) {
+        return
         e.isCancelled = true
         val p = e.player
         p.sendMessage("§c§lCHAT: §7현재 채팅 관리 시스템이 없습니다.  좋은 아이디어가 있다면 건의해 주세요.")

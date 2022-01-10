@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerTeleportEvent
 import org.inventivetalent.glow.GlowAPI
 
 // TODO 노말 테섭용
+/*
 object GlowAllPlayersInNormal: Listener {
 
     @EventHandler
@@ -42,4 +43,4 @@ object GlowAllPlayersInNormal: Listener {
             }
         }
     }
-}
+}*/
