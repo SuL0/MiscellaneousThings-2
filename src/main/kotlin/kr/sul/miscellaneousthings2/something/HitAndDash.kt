@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent
 /**
  * 몹을 때릴 시 2초 안에 F를 누름으로서 대시할 수 있음
  */
+/*
 object HitAndDash: Listener {
     private const val TIME = 2*20L  // F키 누르기까지 시간 제한
     private val latestHitMobTime = hashMapOf<Player, Long>()  // (Player, TimeStamp) - 가장 마지막 몹을 때린 시간
@@ -68,4 +69,4 @@ object HitAndDash: Listener {
     fun onQuit(e: PlayerQuitEvent) {
         latestHitMobTime.remove(e.player)
     }
-}
+}*/
