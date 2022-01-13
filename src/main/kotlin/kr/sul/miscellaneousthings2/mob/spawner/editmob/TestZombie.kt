@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.mob.spawner
+package kr.sul.miscellaneousthings2.mob.spawner.editmob
 
 import com.comphenix.protocol.PacketType
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent

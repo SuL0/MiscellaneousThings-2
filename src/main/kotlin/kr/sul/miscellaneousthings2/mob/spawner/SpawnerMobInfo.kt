@@ -15,54 +15,36 @@ import java.lang.Exception
 import java.util.function.Consumer
 
 
-// habitatBlockType이 다른 몹 Enum 구현체랑 중복되면 안됨
 /**
  * @param habitatBlockType p 주변에 랜덤한 위치 찾았더니 해당 블럭이면 해당 몹 소환
  * @param howToSpawn 해당 몹 스폰하는 방법
  */
-enum class SpawnerMobInfo(val habitatBlockType: Material, private val howToSpawn: Consumer<Location>) {
-    ZOMBIE(Material.GRASS, { spawnLoc ->
+enum class SpawnerMobInfo(private val howToSpawn: Consumer<Location>) {
+    ZOMBIE( { spawnLoc ->
         val waitFor = 2*20L
         spawnAnimation(spawnLoc, ItemStack(Material.FLINT_AND_STEEL).durabilityIB(30).unbreakableIB(true), waitFor)
+        // 몹 소환
         Bukkit.getScheduler().runTaskLater(plugin, {
             val mob = spawnLoc.world.spawnEntity(spawnLoc, EntityType.ZOMBIE) as org.bukkit.entity.Zombie
-            mob.world.spawnParticle(org.bukkit.Particle.CLOUD, mob.location, 2, 0.0, 0.0, 0.0, 0.1)
+            mob.world.spawnParticle(org.bukkit.Particle.CLOUD, mob.location,
+                2, 0.0, 0.0, 0.0, 0.1)
             unarmorLivingEntity(mob)
             mob.isBaby = false
         }, waitFor)
     });
-//    HUSK(Material.SAND, { spawnLoc ->
-//        val waitFor = 10*20L
-//        spawnAnimation(spawnLoc, ItemStack(Material.STONE_AXE), waitFor)           // TODO 스폰 모션
-//        Bukkit.getScheduler().runTaskLater(plugin, {
-//            spawnLoc.world.spawnEntity(spawnLoc, EntityType.HUSK)
-//        }, waitFor)
-//    });
 
     fun spawn(loc: Location) {
         howToSpawn.accept(loc.clone().add(0.0, 1.0, 0.0))  // 블럭 바로 위로 스폰함으로서 몹이 끼이지 않게 함
     }
 
 
-    companion object {
+
+
+
+
+    // 애니메이션용 아머스탠드는 패킷으로 하고, 스레드는 async가 맞긴 할텐데.. 뭐 이것도 문제는 없으므로
+    companion object SpawnAnimationUtil {
         const val ARMORSTAND_TAG = "For Mob Spawn Animation"
-        val mobsHabitatBlockTypeList = run {
-            val list = arrayListOf<Material>()
-            for (habitatBlockType in values().map { it.habitatBlockType }) {
-                list.add(habitatBlockType)
-            }
-            return@run list
-        }
-
-        fun get(habitatBlockType: Material): SpawnerMobInfo {
-            for (mobInfo in values()) {
-                if (habitatBlockType == mobInfo.habitatBlockType) {
-                    return mobInfo
-                }
-            }
-            throw Exception("$habitatBlockType 에 해당하는 SpawnerMobInfo를 찾을 수 없음")
-        }
-
 
         /**
          * itemForAnimation 아이템 내구도가 2틱마다 줄어들면서 Animation

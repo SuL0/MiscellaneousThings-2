@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.mob.spawner
+package kr.sul.miscellaneousthings2.mob.spawner.editmob
 
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
 import org.bukkit.Bukkit
@@ -11,19 +11,23 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.*
 
+
+
+// 몹 넉백
+
 object EditMob: Listener {
-    private val AKnockbackWorlds = arrayListOf<World>()
-    private val BKnockbackWorlds = arrayListOf<World>()
-    init {
-        Bukkit.getScheduler().runTask(plugin) {
-            MobSpawnerConfig.AKnockbackWorldNames.forEach {
-                AKnockbackWorlds.add(Bukkit.getWorld(it))
-            }
-            MobSpawnerConfig.BKnockbackWorldNames.forEach {
-                BKnockbackWorlds.add(Bukkit.getWorld(it))
-            }
-        }
-    }
+//    private val AKnockbackWorlds = arrayListOf<World>()
+//    private val BKnockbackWorlds = arrayListOf<World>()
+//    init {
+//        Bukkit.getScheduler().runTask(plugin) {
+//            MobSpawnerConfig.AKnockbackWorldNames.forEach {
+//                AKnockbackWorlds.add(Bukkit.getWorld(it))
+//            }
+//            MobSpawnerConfig.BKnockbackWorldNames.forEach {
+//                BKnockbackWorlds.add(Bukkit.getWorld(it))
+//            }
+//        }
+//    }
 
     // 몹 템 드랍 방지
     @EventHandler(priority = EventPriority.HIGH)

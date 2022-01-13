@@ -1,14 +1,10 @@
 package kr.sul.miscellaneousthings2.mob.spawner
 
-import kr.sul.miscellaneousthings2.Main.Companion.plugin
-import kr.sul.servercore.file.simplylog.LogLevel
-import kr.sul.servercore.file.simplylog.SimplyLog
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import kotlin.random.Random
-
 
 object AppropriateLocFinder {
     private val random = Random
@@ -27,7 +23,8 @@ object AppropriateLocFinder {
             }
         }
 
-        SimplyLog.log(LogLevel.ERROR_LOW, plugin, "${centerPoint.blockX}, ${centerPoint.blockY}, ${centerPoint.blockZ} 좌표를 기준으로 근처 $blockTypes 이 있는 장소를 찾을 수 없음") // 너무 남발되려나?
+//        SimplyLog.log(LogLevel.ERROR_LOW, plugin,
+//            "${centerPoint.blockX}, ${centerPoint.blockY}, ${centerPoint.blockZ} 좌표를 기준으로 근처 $blockTypes 이 있는 장소를 찾을 수 없음")  // 너무 남발되려나?
         return null
     }
 
