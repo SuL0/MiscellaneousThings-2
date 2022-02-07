@@ -21,7 +21,7 @@ import xyz.upperlevel.spigot.book.BookUtil.PageBuilder
 import java.util.*
 import kotlin.math.round
 
-
+/*
 object RaiderWithBook: Listener {
     private val bookItem: ItemStack
         get() = ItemStack(Material.INK_SACK).durabilityIB(3).nameIB("§c[ §f레이더 §c]")
@@ -140,4 +140,6 @@ object RaiderWithBook: Listener {
     fun onQuit(e: PlayerQuitEvent) {
         glow.remove(e.player)
     }
-}
+
+
+}*/

@@ -14,7 +14,14 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
+/*
 object HidePlayersInSpawn: Listener {
+    val RENDER_DISTANCE = run {
+        val file = File("${Bukkit.getServer().worldContainer}/spigot.yml")
+        val yaml = YamlConfiguration.loadConfiguration(file)
+        return@run yaml.getInt("world-settings.default.entity-tracking-range.players")
+    }
+
     private val showingMap = hashMapOf<Player, ArrayList<Player>>()  // 스폰에서 Key가 볼 수 있는 플레이어 목록
     private const val DISTANCE = 10
 
@@ -104,4 +111,4 @@ object HidePlayersInSpawn: Listener {
             e.isCancelled = true
         }
     }
-}
+}*/

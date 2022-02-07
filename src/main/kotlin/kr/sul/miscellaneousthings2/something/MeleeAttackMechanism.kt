@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
+/*
 object MeleeAttackMechanism: Listener {
     private const val ATTACK_COOLDOWN = 15
     private val attackCooldownTimestampMap = EntityTempDataMap.create<AttackCooldown>(plugin)  // 공격 못하게 막는 시간
@@ -66,4 +67,4 @@ object MeleeAttackMechanism: Listener {
     }
 
     data class AttackCooldown(val material: Material, val cooldownTimestamp: Long)
-}
+}*/
