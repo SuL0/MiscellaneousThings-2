@@ -16,6 +16,13 @@ object AppropriateLocFinder {
     fun find(p: Player, blockTypes: List<Material>): Location? {
         val centerPoint = p.location
 
+        // 예외 지역 (BeachTown 검은 큰 빌딩)
+        if (centerPoint.world.name.startsWith("BeachTown", true)
+            && centerPoint.y >= 77
+            && 365 <= centerPoint.x && centerPoint.x <= 468
+            && 249 <= centerPoint.z && centerPoint.z <= 319) {
+            return null
+        }
         for (i in 1..20) {
             val tryToFind = tryToFind(centerPoint, blockTypes)
             if (tryToFind != null) {  // tryToFind에서 적절한 위치를 찾았을 때
