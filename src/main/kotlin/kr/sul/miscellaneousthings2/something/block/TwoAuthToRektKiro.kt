@@ -4,7 +4,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent
 
-object TwoAutoToRektKiro: Listener {
+object TwoAuthToRektKiro: Listener {
     @EventHandler
     fun onQuit(e: PlayerQuitEvent) {
         if (e.player.name.lowercase() == "rektkiro") {

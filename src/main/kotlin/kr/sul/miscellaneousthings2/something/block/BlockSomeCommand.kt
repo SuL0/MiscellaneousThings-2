@@ -5,12 +5,11 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 
+/*
 object BlockSomeCommand: Listener {
     @EventHandler(priority = EventPriority.HIGH)
     fun onCommand(e: PlayerCommandPreprocessEvent) {
         if (e.isCancelled || e.player.isOp) return
-        if (e.message.startsWith("/elag")) {
-            e.isCancelled = true
-        }
+
     }
-}
+}*/
