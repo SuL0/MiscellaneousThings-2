@@ -4,7 +4,16 @@ plugins {
     id("kr.entree.spigradle") version "2.2.3"
     `java-library`
     `maven-publish`
+    idea
 }
+
+idea {
+    module {
+        isDownloadJavadoc = true
+        isDownloadSources = true
+    }
+}
+
 
 group = "kr.sul"
 version = "1.0-SNAPSHOT"
@@ -16,6 +25,7 @@ repositories {
     maven("http://repo.citizensnpcs.co/")
     maven("https://repo.md-5.net/content/groups/public/")
     maven("https://repo.codemc.io/repository/maven-public/")
+    maven("https://github.com/deanveloper/SkullCreator/raw/mvn-repo/")
     mavenLocal()
 }
 
@@ -36,16 +46,23 @@ dependencies {
     compileOnly("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:1.5.0")
     compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
     compileOnly("org.mcmonkey:sentinel:2.4.0-SNAPSHOT")
-    compileOnly(files("$pluginStorage/ServerCore_S.jar"))
-    compileOnly(files("$pluginStorage/Parachute_S.jar"))
-    compileOnly(files("$pluginStorage/EnderVaults-Bukkit-v1.0.13.jar"))
-    compileOnly(files("$pluginStorage/CrackShot-2_S.jar"))
-    compileOnly(files("$pluginStorage/CorpseReborn_S.jar"))
-    compileOnly(files("$pluginStorage/HolographicDisplays.jar"))
-//    compileOnly(files("$pluginStorage/helper.jar"))
-//    compileOnly(files("$pluginStorage/Parachute_S.jar"))
+    compileOnly("dev.dbassett:skullcreator:3.0.1")
+    compileOnly("kr.sul:ServerCore:1.0-SNAPSHOT")
+    compileOnly("me.sul:Parachute:1.0-SNAPSHOT")
+    compileOnly("org.golde.bukkit.corpsereborn:CorpseReborn:1.0-SNAPSHOT")
+    compileOnly("aaclans:AAClans:1.0-SNAPSHOT")
+    compileOnly("kr.sul:CrackShot-2:1.0-SNAPSHOT")
+    compileOnly("xyz.upperlevel.spigot.book:spigot-book-api:1.5")
+    compileOnly("com.comphenix.protocol:ProtocolLib:4.6.0")
+    compileOnly("org.inventivetalent:glowapi:1.4.6-SNAPSHOT")
+    compileOnly("de.tr7zw:item-nbt-api-plugin:2.6.0")
 
-    compileOnly(fileTree("$pluginStorage/LibrariesFor122Development").matching { include("*.jar") })
+    compileOnly(files("$pluginStorage/EnderVaults-Bukkit-v1.0.13.jar"))
+    compileOnly(files("$pluginStorage/ResourcepackSoundPlayer_S.jar"))
+    compileOnly(files("$pluginStorage/Dependencies/HolographicDisplays.jar"))
+    compileOnly(files("$pluginStorage/Dependencies/nbteditor-3.0.1.jar"))
+    compileOnly(files("$pluginStorage/Dependencies/EffectLib-9.0.jar"))
+//    compileOnly(files("$pluginStorage/helper.jar"))
 }
 
 spigot {
@@ -61,6 +78,8 @@ spigot {
         }
         create("돈")
         create("인사하기")
+        create("이동지점알림끄기")
+        create("방어구수정")
     }
 }
 
@@ -71,7 +90,7 @@ tasks {
 
     val copyPlugin = register<Copy>("copyPlugin") {
         from(files("$pluginStorage/${project.name}_S.jar"))
-        into(file("${copyPluginDestination}"))
+        into(file(copyPluginDestination))
     }
 
     jar {
@@ -79,11 +98,6 @@ tasks {
         destinationDirectory.set(file(pluginStorage))
         finalizedBy(copyPlugin)
         finalizedBy(publishToMavenLocal)
-    }
-
-    javadoc {
-        source = sourceSets.main.get().allJava
-        classpath = configurations.compile.get()
     }
 }
 

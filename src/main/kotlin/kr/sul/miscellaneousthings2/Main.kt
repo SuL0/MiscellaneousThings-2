@@ -1,39 +1,52 @@
 package kr.sul.miscellaneousthings2
 
+/* import kr.sul.miscellaneousthings2.something.HitAndDash */
+//import kr.sul.miscellaneousthings2.something.world.spawn.SpawnWorldFeatures
 import kr.sul.miscellaneousthings2.chat.AreaChat
 import kr.sul.miscellaneousthings2.chat.ChatInSpawn
 import kr.sul.miscellaneousthings2.combatlog.CombatLog
-import kr.sul.miscellaneousthings2.command.KillAllCommand
 import kr.sul.miscellaneousthings2.command.EconomyCommand
+import kr.sul.miscellaneousthings2.command.KillAllCommand
 import kr.sul.miscellaneousthings2.command.NbtViewCommand
+import kr.sul.miscellaneousthings2.customarmor.ArmorMgr
+import kr.sul.miscellaneousthings2.customarmor.ArmorVendingMachine
 import kr.sul.miscellaneousthings2.endervaultsaddon.SelectorListener
 import kr.sul.miscellaneousthings2.endervaultsaddon.VaultCommand
-import kr.sul.miscellaneousthings2.something.HitAndDash
 import kr.sul.miscellaneousthings2.knockdown.RideTest
-import kr.sul.miscellaneousthings2.mob.spawner.EditMob
 import kr.sul.miscellaneousthings2.mob.spawner.MobSpawner
-import kr.sul.miscellaneousthings2.mob.spawner.TestZombie
+import kr.sul.miscellaneousthings2.mob.spawner.editmob.EditMob
+import kr.sul.miscellaneousthings2.mob.spawner.editmob.TestZombie
 import kr.sul.miscellaneousthings2.something.*
 import kr.sul.miscellaneousthings2.something.block.*
 import kr.sul.miscellaneousthings2.something.world.BackgroundMusicPlayer
 import kr.sul.miscellaneousthings2.something.world.FixTimeInSomeWorlds
-import kr.sul.miscellaneousthings2.something.world.spawn.SpawnWorldFeatures
 import kr.sul.miscellaneousthings2.something.world.TpToSpawnWhenFirstJoin
+import kr.sul.miscellaneousthings2.something.world.spawn.SpawnWorldFeatures
 import kr.sul.miscellaneousthings2.tutorial.TutorialPlayer
 import kr.sul.miscellaneousthings2.warpgui.WarpGUI
 import kr.sul.miscellaneousthings2.warpgui.data.WarpPlayerDataMgr
+import kr.sul.miscellaneousthings2.warptobeachtown.FountainOfLife
+import kr.sul.miscellaneousthings2.warptobeachtown.WarpToBeachtownWorld
 import kr.sul.servercore.something.BossBarTimer
+import kr.sul.servercore.util.ItemBuilder.nameIB
 import kr.sul.servercore.util.ObjectInitializer
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarFlag
 import org.bukkit.boss.BarStyle
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.upperlevel.spigot.book.BookUtil
+import java.lang.reflect.InvocationHandler
+import java.lang.reflect.Method
+import java.lang.reflect.Proxy
 import java.util.logging.Level
 
 class Main : JavaPlugin(), Listener {
@@ -43,13 +56,14 @@ class Main : JavaPlugin(), Listener {
     }
 
     override fun onEnable() {
-        plugin = this as Plugin
+        plugin = this
         instance = this
         registerClasses()
     }
 
     override fun onDisable() {
         WarpPlayerDataMgr.onPluginDisable()
+        WarpToBeachtownWorld.onPluginDisable()
     }
 
     private fun registerClasses() {
@@ -69,34 +83,39 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(ForceSneakToPickUp, plugin)
         Bukkit.getPluginManager().registerEvents(PreventToPickUpVanillaItem, plugin)
         Bukkit.getPluginManager().registerEvents(VaultCommand, plugin)
-        Bukkit.getPluginManager().registerEvents(TwoAutoToRektKiro, plugin)
+        Bukkit.getPluginManager().registerEvents(TwoAuthToRektKiro, plugin)
         Bukkit.getPluginManager().registerEvents(BackgroundMusicPlayer, plugin)
         Bukkit.getPluginManager().registerEvents(TpToSpawnWhenFirstJoin, plugin)
-        Bukkit.getPluginManager().registerEvents(RaiderWithBook, plugin)
-        Bukkit.getPluginManager().registerEvents(HitAndDash, plugin)
+//        Bukkit.getPluginManager().registerEvents(RaiderWithBook, plugin)
+//        Bukkit.getPluginManager().registerEvents(HitAndDash, plugin)
         Bukkit.getPluginManager().registerEvents(BlockLeftHand, plugin)
-        Bukkit.getPluginManager().registerEvents(SpawnWorldFeatures, plugin)
+//        Bukkit.getPluginManager().registerEvents(SpawnWorldFeatures, plugin)
 //        Bukkit.getPluginManager().registerEvents(HidePlayersInSpawn, plugin)
 //        Bukkit.getPluginManager().registerEvents(HardZombie, plugin)
 //        Bukkit.getPluginManager().registerEvents(GlowAllPlayersInNormal, plugin)
-        Bukkit.getPluginManager().registerEvents(MeleeAttackMechanism, plugin)
+//        Bukkit.getPluginManager().registerEvents(MeleeAttackMechanism, plugin)
         Bukkit.getPluginManager().registerEvents(TestZombie, plugin)
-        Bukkit.getPluginManager().registerEvents(WarpHelperInSpawn, plugin)
+        Bukkit.getPluginManager().registerEvents(FKeyGuiInSpawn, plugin)
         Bukkit.getPluginManager().registerEvents(ArmorWeight, plugin)
         Bukkit.getPluginManager().registerEvents(BlueberryInBush, plugin)
         Bukkit.getPluginManager().registerEvents(WorldProtect, plugin)
         Bukkit.getPluginManager().registerEvents(PlayerJoinMessage, plugin)
         Bukkit.getPluginManager().registerEvents(DebugCommand, plugin)
         Bukkit.getPluginManager().registerEvents(CombatLog, plugin)
+        Bukkit.getPluginManager().registerEvents(ArmorMgr, plugin)
+        Bukkit.getPluginManager().registerEvents(SpawnWorldFeatures, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
         ObjectInitializer.forceInit(FixTimeInSomeWorlds::class.java)
         ObjectInitializer.forceInit(AutoReload::class.java)
+        ObjectInitializer.forceInit(FountainOfLife::class.java)
 
 
         getCommand("nbtview").executor = NbtViewCommand
         getCommand("돈").executor = EconomyCommand
         getCommand("인사하기").executor = PlayerJoinMessage
+        getCommand("이동지점알림끄기").executor = WarpToBeachtownWorld
+        getCommand("방어구수정").executor = ArmorVendingMachine
 
         // TODO FOr TEST!
         Bukkit.getPluginManager().registerEvents(this, plugin)
@@ -133,11 +152,15 @@ class Main : JavaPlugin(), Listener {
 
 
 
-        if (e.message.startsWith("/dur") && e.message.contains(" ")) {
+        if (e.message.startsWith("/dur")) {
             e.isCancelled = true
-            val arg1 = e.message.split(" ")[1].toShort()
-            val item = e.player.inventory.itemInMainHand
-            item.durability = (item.durability - arg1).toShort()
+            if (e.message.contains(" ")) {
+                val arg1 = e.message.split(" ")[1].toShort()
+                val item = e.player.inventory.itemInMainHand
+                item.durability = (item.durability - arg1).toShort()
+            } else if (e.message == "/dur") {
+                e.player.sendMessage("dur: ${e.player.inventory.itemInMainHand.durability}")
+            }
         }
 
         if (e.message == "/아이템추출") {
@@ -175,7 +198,7 @@ class Main : JavaPlugin(), Listener {
             e.player.openInventory(inv)
         }
 
-        if (e.message == "/book") {
+        if (e.message == "/book1") {
             e.isCancelled = true
             val page1 = BookUtil.PageBuilder().add("      §6§l§o§n< 가이드 북 >\n")
                 .add(
@@ -236,12 +259,215 @@ class Main : JavaPlugin(), Listener {
             e.isCancelled = true
             NpcTest.run(e.player)
         }
+        if (e.player.isOp && e.message.startsWith("/c ")) {
+            e.isCancelled = true
+            var msg = e.message.removeRange(0, 2)
+            msg = msg.replace("&", "§")
+            Bukkit.getOnlinePlayers().forEach {
+                it.sendMessage(msg)
+            }
+        }
+//        if (e.message == "/asynct") {
+//            e.isCancelled = true
+//            Bukkit.broadcastMessage("thread : ${Thread.currentThread().name}")
+//            val elapsed = measureTimeMillis {
+//                for (i in 1..10000) {
+//                    AppropriateLocFinder.find(e.player, arrayListOf(Material.CONCRETE))
+//                }
+//            }
+//            Bukkit.broadcastMessage("sync-took ${elapsed}ms")
+//            launchAsync {
+//                Bukkit.broadcastMessage("thread : ${Thread.currentThread().name}")
+//                val elapsed = measureTimeMillis {
+//                    for (i in 1..10000) {
+//                        AppropriateLocFinder.find(e.player, arrayListOf(Material.CONCRETE))
+//                    }
+//                }
+//                Bukkit.broadcastMessage("async-took ${elapsed}ms")
+//            }
+//        }
+        if (e.message == "/book2") {
+            e.isCancelled = true
+            val page1 = BookUtil.PageBuilder()
+                .add("\n")
+                .add(
+                    BookUtil.TextBuilder.of("§0§nQ. 이곳은 뭐하는 서버인가요?\n")
+                        .onHover(BookUtil.HoverAction.showText(
+                            "A. §a생존§f이라는 큰 틀 속에서 정답은 여러가지 있습니다.\n" +
+                            "§c뭐하는 서버§f인지는 §c생존자 §f분들께서 서버를 플레이 하시면서 답을 찾으실겁니다.    \n" +
+                            "§f지금은 그저 당장 뭘 해야되는지 알고 계시는게 좋을것 같습니다"
+                        )).build()
+                )
+                .add(
+                    BookUtil.TextBuilder.of("\n§0§nQ. 처음엔 뭘 해야하나요?\n")
+                        .onHover(BookUtil.HoverAction.showText(
+                            "A. §8[§6F§8] §f메뉴키 를 통해 §a생존§f을 시작하시면 됩니다.\n" +
+                                    "§f맵 곳곳에는 §c생존자분들을 §f위한 §b구호물자 보급품§f이 다수 존재합니다.\n" +
+                                    "§f집안 곳곳에 존재하니 찾아 얻으신 뒤 이 §a세계에서 적응하고 살아간다는걸 §f배워가셨으면 좋겠습니다.    "
+                        )).build()
+                )
+                .add(
+                    BookUtil.TextBuilder.of("\n§0§nQ. 특정 명령어에 대해 알고싶어요\n")
+                        .onHover(BookUtil.HoverAction.showText(
+                            "A. §7§ocommand: §6/명령어 §f을 입력하면 §c생존자§f 분들이\n" +
+                                    "서버를 플레이하시면서 궁금해하는 명령어 들을 보기좋게 카테고리별로 정리해놨습니다.    "
+                        )).build()
+                )
+                .add(
+                    BookUtil.TextBuilder.of("\n§0§nQ. 이 서버에 후원을 하고싶어요 보상은 있나요?\n")
+                        .onHover(BookUtil.HoverAction.showText(
+                            "A. 죄송하게도 무언가를 바라고 후원하신다면 받지 않습니다.\n" +
+                                    "다만 꾸미는걸 좋아하시는 유저분들에 한에 §c[기동] §2[수색] §e[특공] 중 1개를 칭호로 드리겠습니다.    "
+                        )).build()
+                )
+
+                .add(
+                    BookUtil.TextBuilder.of("\n§0§nQ. 관리자분께 문의 드릴 내용이 있어요\n")
+                        .onHover(BookUtil.HoverAction.showText(
+                            "혹은 서버에 관리자가 존재할 경우 §7§ocommand: §e/관리자 호출 §f을 통해 불러주시길 바랍니다.    \n" +
+                                    "메시지/호출 간에는 반드시 문의를해야 하는 내용인지 다시 검토해주시길 바랍니다.\n" +
+                                    "관리자는 시스템이 아닌 사람이기에 개인시간이 필요한 존재입니다."
+                        )).build()
+                )
+                .build() // 페이지 빌드
+
+
+            val bookItem = BookUtil.writtenBook()
+                .author("저자").title("제목")
+                .pages(page1)
+                .build()
+
+            e.player.inventory.addItem(bookItem)
+        }
+
+        if (e.message == "/captcha") {
+
+        }
+        if (e.message == "/nms") {
+            e.isCancelled = true
+            val item = e.player.inventory.itemInMainHand
+            val nmsItem = (item as CraftItemStack).handle
+            nmsItem.tag!!.setBoolean("Unbreakable", !nmsItem.tag!!.getBoolean("Unbreakable"))
+        }
+
+        if (e.message == "/bytebuddy") {
+            e.isCancelled = true
+
+//            val targetString = "테스트"
+
+
+            val meta = e.player.inventory.itemInMainHand.itemMeta
+            val invocationHandler = object: InvocationHandler {
+                val target = meta  // meta와는 다른 객체로 설정됨 < ??
+                override fun invoke(proxy: Any, method: Method, args: Array<Any>?): Any {
+                    if (args == null) {
+                        return method.invoke(target) // parameter에 뭐가 있어도 args는 null인데?
+                    }
+                    return method.invoke(target, *args)
+                }
+            }
+            val proxiedMeta = Proxy.newProxyInstance(
+                ItemMeta::class.java.classLoader,
+//                invocationHandler::class.java.classLoader,
+                arrayOf(ItemMeta::class.java),
+                invocationHandler
+            ) as ItemMeta
+            Bukkit.broadcastMessage(proxiedMeta.displayName)
+
+            Bukkit.broadcastMessage("proxiedMeta ${proxiedMeta.lore.size}")
+            proxiedMeta.lore.add("Is this really not added in meta?")
+            Bukkit.broadcastMessage("proxiedMeta ${proxiedMeta.lore.size}")
+            Bukkit.broadcastMessage("meta ${meta.lore.size}")
+            meta.lore.add("Is this really not added in meta?")
+            Bukkit.broadcastMessage("meta ${meta.lore.size}")
+
+
+//            try {
+//                Bukkit.broadcastMessage(proxiedMeta.lore.get(0))
+//            } catch (ignored: Exception) {}
+//            try {
+//                Bukkit.broadcastMessage(proxiedMeta.displayName)
+//            } catch (ignored: Exception) {}
+
+//
+//            val dynamicType = ByteBuddy()
+//                .subclass(ItemMeta::class.java)
+//                .method(ElementMatchers.any())
+//                .intercept(InvocationHandlerAdapter.of(invocationHandler))
+//                .make()
+//                .load(ItemMeta::class.java.classLoader)
+//                .loaded
+//            Bukkit.broadcastMessage("${dynamicType.newInstance()}")
+
+        }
+        if (e.message == "/asBukkitMirror") {
+            e.isCancelled = true
+            val item = e.player.inventory.itemInMainHand
+            val nmsItem = (item as CraftItemStack).handle
+            val mirror = nmsItem.asBukkitMirror()
+            mirror.amount += 1
+            Bukkit.broadcastMessage("${item.amount}  vs  ${mirror.amount}")
+        }
+        if (e.message == "/craftItemStack") {
+            e.isCancelled = true
+            val chestPlate = ItemStack(Material.DIAMOND_CHESTPLATE).nameIB("커맨드로 생성된 갑옷")
+            e.player.inventory.chestplate = chestPlate
+
+            Bukkit.broadcastMessage("§ae.player.inventory.chestplate is CraftItemStack?: ${e.player.inventory.chestplate is CraftItemStack}")
+            Bukkit.getScheduler().runTask(plugin) {
+                Bukkit.broadcastMessage("§a[1Tick]e.player.inventory.chestplate is CraftItemStack?: ${e.player.inventory.chestplate is CraftItemStack}")
+            }
+
+        }
     }
+
+
     private fun parseIntToTwoDigitStr(i: Int): String {
         if (i < 10) {
             return "0$i"
         }
         return "$i"
+    }
+
+//    lateinit var dashMap : EntityTempDataMap<Int>
+//    fun init() {
+//        dashMap = EntityTempDataMap.create(plugin)
+//        Bukkit.getScheduler().runTaskTimer(plugin, {
+//        Bukkit.getOnlinePlayers().forEach { p ->
+//        if (p.isSprinting) {
+//            if (dashMap.containsKey(p)) {
+//                dashMap[p] = dashMap[p]!!+1
+//            } else {
+//                dashMap[p] = 1
+//            }
+//            p.walkSpeed = 0.2F + dashMap[p]!!/400F
+//            Bukkit.broadcastMessage("${p.walkSpeed}")
+//        }
+//        else {
+//            if (dashMap.containsKey(p)) {
+//                dashMap.remove(p)
+//                p.walkSpeed = 0.2F
+//                Bukkit.broadcastMessage("§c${p.walkSpeed} reset")
+//            }
+//        }
+//        }
+//        }, 1L, 2L)
+//    }
+}
+
+open class Source {
+    fun hello(name: String?): String {
+//        Bukkit.broadcastMessage("a")
+        return "a"
+    }
+}
+
+open class Target {
+    companion object {
+        fun hello(name: String): String {
+//            Bukkit.broadcastMessage("Hello $name!")
+            return "Hello $name!"
+        }
     }
 }
 
