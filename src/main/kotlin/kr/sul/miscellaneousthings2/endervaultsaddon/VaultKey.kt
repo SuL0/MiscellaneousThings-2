@@ -1,10 +1,10 @@
 package kr.sul.miscellaneousthings2.endervaultsaddon
 
-import kr.sul.servercore.nbtapi.NbtItem
 import kr.sul.servercore.util.ItemBuilder.loreIB
 import kr.sul.servercore.util.ItemBuilder.nameIB
 import kr.sul.servercore.util.UniqueIdAPI
 import org.bukkit.Material
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 import org.bukkit.inventory.ItemStack
 
 enum class VaultKey(private val item: ItemStack) {
@@ -13,14 +13,13 @@ enum class VaultKey(private val item: ItemStack) {
     fun getItem(): ItemStack {
         val item = item.clone()
         UniqueIdAPI.carveUniqueID(item)
-        val nbti = NbtItem(item)
-        nbti.tag.setString(VAULT_KEY_TYPE, "WOODEN_KEY")
-        nbti.applyToOriginal()
+        val nmsItemTag = (item as CraftItemStack).handle.tagOrDefault
+        nmsItemTag.setString(VAULT_KEY_TYPE, "WOODEN_KEY")
         return item
     }
     fun isSameKey(itemToCompare: ItemStack): Boolean {
-        val nbti = NbtItem(itemToCompare)
-        return (nbti.tag.getString(VAULT_KEY_TYPE) == this.name)  // Key 타입인지 보고, 자신 Enum과 KeyType 비교
+        val nmsItemTag = (itemToCompare as CraftItemStack).handle.tagOrDefault
+        return (nmsItemTag.getString(VAULT_KEY_TYPE) == this.name)  // Key 타입인지 보고, 자신 Enum과 KeyType 비교
     }
 
     companion object {
