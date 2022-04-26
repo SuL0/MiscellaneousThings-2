@@ -1,5 +1,6 @@
 package kr.sul.miscellaneousthings2.mob.spawner
 
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -16,16 +17,27 @@ object AppropriateLocFinder {
     fun find(p: Player, blockTypes: List<Material>): Location? {
         val centerPoint = p.location
 
-        // 예외 지역 (BeachTown 검은 큰 빌딩)
-        if (centerPoint.world.name.startsWith("BeachTown", true)
-            && centerPoint.y >= 77
-            && 365 <= centerPoint.x && centerPoint.x <= 468
-            && 249 <= centerPoint.z && centerPoint.z <= 319) {
-            return null
+        // 예외 지역 (여기에 포함되면 좀비 소환 시도 자체를 하지 않음)
+        if (centerPoint.world.name.startsWith("BeachTown", true)) {
+            // BeachTown 검은 큰 빌딩 2층부터
+            if (centerPoint.y >= 77
+                && 365 <= centerPoint.x && centerPoint.x <= 468
+                && 249 <= centerPoint.z && centerPoint.z <= 319) {
+                return null
+            }
         }
+
         for (i in 1..20) {
             val tryToFind = tryToFind(centerPoint, blockTypes)
             if (tryToFind != null) {  // tryToFind에서 적절한 위치를 찾았을 때
+                // 예외 지역(다시 찾기)
+                if (tryToFind.world.name.startsWith("BeachTown", true)) {
+                    // 검은 큰 빌딩 옆의 맥도날드
+                    if (tryToFind.x in 482.0..502.0
+                        && tryToFind.z in 293.0..304.0) {
+                        continue
+                    }
+                }
                 return tryToFind
             }
         }
@@ -42,6 +54,10 @@ object AppropriateLocFinder {
         val randomLength = random.nextInt(8, 15+1)  // 8~15
         val randomDirVector = Vector(random.nextDouble(-1.0, 1.0), 0.0, random.nextDouble(-1.0, 1.0)).normalize().multiply(randomLength)
         val randomLoc = centerPoint.clone().add(randomDirVector).toBlockLocation()
+        Bukkit.broadcastMessage("${randomLoc.block.lightFromSky}")
+        if (randomLoc.block.lightFromSky <= 12) {
+            return null
+        }
 
         // 기준 좌표에서 위 아래 넓혀나가며 찾는 방식
         val world = centerPoint.world
