@@ -12,6 +12,7 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -44,13 +45,13 @@ object SelectorListener: Listener {
     // 열쇠를 드래그 한 채로 잠긴 Vault를 클릭하면 Vault 잠금을 해제함
     @EventHandler
     fun onClickWithKey(e: InventoryClickEvent) {
-        if (e.cursor != null && VaultKey.isKeyItem(e.cursor)
-            && e.currentItem != null &&e.currentItem.type != Material.AIR) {
-            val nbtItem = NBTItem(e.currentItem)
+        // GUI 이름이 Lang.GUI_SELECTOR_TITLE 인지 확인, Vault 아이템인지도 확인
+        // 지금 창고 열쇠 종류는 확인을 하지 않고있음.
+        if (e.cursor != null && e.currentItem != null && e.currentItem.type != Material.AIR
+            && e.inventory.name == enderVaultsPlugin.value.language.get(Lang.VAULT_SELECTOR_TITLE)
+            && VaultKey.isKeyItem(e.cursor)) {
 
-            // GUI 이름이 Lang.GUI_SELECTOR_TITLE 인지 확인하고, Vault 아이템인지도 확인
-            if (e.inventory.name == enderVaultsPlugin.value.language.get(Lang.VAULT_SELECTOR_TITLE)
-                && nbtItem.hasKey(SelectorConstants.NBT_VAULT_ITEM)
+            if ((e.currentItem as CraftItemStack).handle.tagOrDefault.hasKey(SelectorConstants.NBT_VAULT_ITEM)
                 && e.currentItem.itemMeta.displayName == ChatColor.translateAlternateColorCodes('&', enderVaultsConfig.value.getString("selector.template.locked.title"))) {   // itemMeta 없어도 NPE ㄴ?
 
                 val clickedVaultPermission = "endervaults.vault.${e.slot +1}"
