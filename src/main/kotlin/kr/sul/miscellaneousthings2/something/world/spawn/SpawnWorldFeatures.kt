@@ -1,10 +1,12 @@
 package kr.sul.miscellaneousthings2.something.world.spawn
 
+import kr.sul.miscellaneousthings2.Main.Companion.plugin
 import kr.sul.servercore.util.ClassifyWorlds
 import kr.sul.servercore.util.MsgPrefix
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftSlime
 import org.bukkit.entity.EntityType
@@ -14,12 +16,14 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 
+// 플레이어 무적
 object SpawnWorldFeatures: Listener {
     private val targetWorlds = ClassifyWorlds.spawnWorlds
     private val PREFIX = MsgPrefix.get("URL")
@@ -27,22 +31,24 @@ object SpawnWorldFeatures: Listener {
     private const val HITBOX_ENT_NAME = "[SPAWN-HITBOX]"
 
     init {
-        targetWorlds.forEach { world ->
-            world.entities.forEach { ent ->
-                if (ent.customName != null && ent.customName.startsWith(HITBOX_ENT_NAME)) {
-                    ent.remove()
+        Bukkit.getScheduler().runTask(plugin) {
+            targetWorlds.forEach { world ->
+                world.entities.forEach { ent ->
+                    if (ent.customName != null && ent.customName.startsWith(HITBOX_ENT_NAME)) {
+                        ent.remove()
+                    }
                 }
             }
-        }
-        targetWorlds.forEach { world ->
-            for (i in 0..2) {
-                for (j in 0..2) {
-                    // 네이버 카페
-                    spawnHitbox(Location(world, 824.5+i, 53.3+j, 769.5, -180F, 0F))
-                    // 위성지도
-                    spawnHitbox(Location(world, 830.5+i, 53.3+j, 769.5, -180F, 0F))
-                    // 디스코드
-                    spawnHitbox(Location(world, 836.5+i, 53.3+j, 769.5, -180F, 0F))
+            targetWorlds.forEach { world ->
+                for (i in 0..2) {
+                    for (j in 0..2) {
+                        // 네이버 카페
+                        spawnHitbox(Location(world, 824.5+i, 53.3+j, 769.0, -180F, 0F))
+                        // 위성지도
+                        spawnHitbox(Location(world, 830.5+i, 53.3+j, 769.0, -180F, 0F))
+                        // 디스코드
+                        spawnHitbox(Location(world, 836.5+i, 53.3+j, 769.0, -180F, 0F))
+                    }
                 }
             }
         }
@@ -52,7 +58,7 @@ object SpawnWorldFeatures: Listener {
         val entity = location.world.spawnEntity(location, HITBOX_ENT_TYPE) as Slime
         val nmsEntity = (entity as CraftSlime).handle
         nmsEntity.isNoAI = true
-        nmsEntity.setInvulnerable(false)
+        nmsEntity.setInvulnerable(true)
         nmsEntity.isSilent = true
         nmsEntity.isNoGravity = true
         nmsEntity.customName = HITBOX_ENT_NAME
@@ -141,4 +147,12 @@ object SpawnWorldFeatures: Listener {
             p.sendMessage("")
         }
     }
+
+    @EventHandler
+    fun onKilled(e: EntityDeathEvent) {
+        if (e.entity.customName != null && e.entity.customName == HITBOX_ENT_NAME) {
+            e.isCancelled = true
+        }
+    }
+
 }
