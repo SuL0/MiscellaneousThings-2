@@ -4,7 +4,6 @@ import kr.sul.miscellaneousthings2.Main.Companion.plugin
 import kr.sul.miscellaneousthings2.warpgui.GuiItems.channel
 import kr.sul.miscellaneousthings2.warpgui.GuiItems.world
 import kr.sul.miscellaneousthings2.warpgui.data.WarpPlayerDataMgr
-import kr.sul.servercore.nbtapi.NbtItem
 import kr.sul.servercore.something.BossBarTimer
 import kr.sul.servercore.util.ClassifyWorlds
 import kr.sul.servercore.util.ItemBuilder.nameIB
@@ -15,6 +14,7 @@ import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -116,11 +116,11 @@ object WarpGUI: Listener {
             e.isCancelled = true
             if (e.currentItem.type == Material.AIR) return
             val item = e.currentItem
-            val nbti = NbtItem(item)
-            if (nbti.tag.getString(GuiItems.WARP_NAME_KEY) != null) {
-                val warpName = nbti.tag.getString(GuiItems.WARP_NAME_KEY)
-                val channel = nbti.tag.getInt(GuiItems.CHANNEL_KEY)
-                val worldName = nbti.tag.getString(GuiItems.WORLD_NAME_KEY)
+            val nmsItemTag = (item as CraftItemStack).handle.tagOrDefault
+            if (nmsItemTag.getString(GuiItems.WARP_NAME_KEY) != null) {
+                val warpName = nmsItemTag.getString(GuiItems.WARP_NAME_KEY)
+                val channel = nmsItemTag.getInt(GuiItems.CHANNEL_KEY)
+                val worldName = nmsItemTag.getString(GuiItems.WORLD_NAME_KEY)
                 val world = Bukkit.getWorld(worldName)
                 if (warpName != "잠김") {
                     warp(p, warpName, channel, world)
