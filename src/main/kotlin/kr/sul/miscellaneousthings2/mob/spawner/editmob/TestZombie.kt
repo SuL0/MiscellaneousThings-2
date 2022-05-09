@@ -5,6 +5,7 @@ import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
 import kr.sul.servercore.util.EntityTempDataMap
 import kr.sul.servercore.util.ProtocolManager.pm
+import kr.sul.servercore.util.SkullCreator
 import kr.sul.servercore.util.UptimeBasedOnTick
 import org.bukkit.Bukkit
 import org.bukkit.entity.LivingEntity
@@ -47,6 +48,9 @@ object TestZombie: Listener {
             zombie.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 999999, 2, true, false))
             zombie.maxHealth = 20.toDouble()
             zombie.health = zombie.maxHealth
+            // TODO: 재생효과 추가
+            val skull = SkullCreator.itemFromName("PierreWlnzenz")
+            zombie.equipment.helmet = skull
         }
     }
 
@@ -69,16 +73,20 @@ object TestZombie: Listener {
             e.damage = ZOMBIE_DAMAGE
 //            p.damage(ZOMBIE_DAMAGE)
 
-            Bukkit.getScheduler().runTaskLater(plugin, {
+            val dealDamageToPlayerFunc = fun(): Boolean {
+                if (p.isDead || !p.isOnline) return false
                 pm.sendServerPacket(p, packet)
                 setTempVulnerability(p)
-                p.damage(ZOMBIE_DAMAGE)
-
-                Bukkit.getScheduler().runTaskLater(plugin, {
-                    pm.sendServerPacket(p, packet)
-                    setTempVulnerability(p)
-                    p.damage(ZOMBIE_DAMAGE)
-                }, 2L)
+                p.damage(ZOMBIE_DAMAGE)  // 데미지가 절대값으로 들어감. 데미지 가한 자를 e.damager(zombie)로 해 버리면 onAttack이 무한 재귀에 빠지게 됨
+                return true
+            }
+            Bukkit.getScheduler().runTaskLater(plugin, {
+                val result = dealDamageToPlayerFunc.invoke()
+                if (result) {
+                    Bukkit.getScheduler().runTaskLater(plugin, {
+                        dealDamageToPlayerFunc.invoke()
+                    }, 2L)
+                }
             }, 2L)
         }
     }

@@ -1,6 +1,5 @@
 package kr.sul.miscellaneousthings2.mob.spawner
 
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -54,7 +53,6 @@ object AppropriateLocFinder {
         val randomLength = random.nextInt(8, 15+1)  // 8~15
         val randomDirVector = Vector(random.nextDouble(-1.0, 1.0), 0.0, random.nextDouble(-1.0, 1.0)).normalize().multiply(randomLength)
         val randomLoc = centerPoint.clone().add(randomDirVector).toBlockLocation()
-        Bukkit.broadcastMessage("${randomLoc.block.lightFromSky}")
         if (randomLoc.block.lightFromSky <= 12) {
             return null
         }

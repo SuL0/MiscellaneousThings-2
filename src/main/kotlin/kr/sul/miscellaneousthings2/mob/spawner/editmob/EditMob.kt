@@ -54,6 +54,7 @@ object EditMob: Listener {
         }
     }
     // 좀비 압사하려 하면 블럭 -> 좀비 방향으로 밀어내기
+    // TODO 이거 작동 안하는데 ㅋㅋㅋㅋㅋㅋ
     @EventHandler(priority = EventPriority.HIGH)
     fun pushZombieWhenIfSuffos(e: EntityDamageByBlockEvent) {
         if (e.isCancelled) return
