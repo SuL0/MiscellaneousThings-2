@@ -8,10 +8,9 @@ import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftSlime
+import org.bukkit.World
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
-import org.bukkit.entity.Slime
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -19,16 +18,15 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.inventory.EquipmentSlot
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
 
 
 // 플레이어 무적
 object SpawnWorldFeatures: Listener {
     private val targetWorlds = ClassifyWorlds.spawnWorlds
     private val PREFIX = MsgPrefix.get("URL")
-    private val HITBOX_ENT_TYPE = EntityType.SLIME
-    private const val HITBOX_ENT_NAME = "[SPAWN-HITBOX]"
+    val HITBOX_ENT_TYPE = EntityType.SLIME
+    const val HITBOX_ENT_NAME = "[SPAWN-HITBOX]"
+    private val hitboxEntMap = hashMapOf<World, ArrayList<HitboxEntity>>()
 
     init {
         Bukkit.getScheduler().runTask(plugin) {
@@ -40,31 +38,26 @@ object SpawnWorldFeatures: Listener {
                 }
             }
             targetWorlds.forEach { world ->
+                hitboxEntMap[world] = arrayListOf()
                 for (i in 0..2) {
                     for (j in 0..2) {
                         // 네이버 카페
-                        spawnHitbox(Location(world, 824.5+i, 53.3+j, 769.0, -180F, 0F))
+                        hitboxEntMap[world]!!.add(
+                            HitboxEntity.spawnHitBox(Location(world, 824.5+i, 53.3+j, 769.0, -180F, 0F))
+                        )
                         // 위성지도
-                        spawnHitbox(Location(world, 830.5+i, 53.3+j, 769.0, -180F, 0F))
+                        hitboxEntMap[world]!!.add(
+                            HitboxEntity.spawnHitBox(Location(world, 830.5+i, 53.3+j, 769.0, -180F, 0F))
+                        )
                         // 디스코드
-                        spawnHitbox(Location(world, 836.5+i, 53.3+j, 769.0, -180F, 0F))
+                        hitboxEntMap[world]!!.add(
+                            HitboxEntity.spawnHitBox(Location(world, 836.5+i, 53.3+j, 769.0, -180F, 0F))
+                        )
                     }
                 }
             }
+            maintainHitBox()
         }
-    }
-
-    private fun spawnHitbox(location: Location) {
-        val entity = location.world.spawnEntity(location, HITBOX_ENT_TYPE) as Slime
-        val nmsEntity = (entity as CraftSlime).handle
-        nmsEntity.isNoAI = true
-        nmsEntity.setInvulnerable(true)
-        nmsEntity.isSilent = true
-        nmsEntity.isNoGravity = true
-        nmsEntity.customName = HITBOX_ENT_NAME
-        nmsEntity.customNameVisible = false
-        entity.size = 2
-        entity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 100, true), true)
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -155,4 +148,21 @@ object SpawnWorldFeatures: Listener {
         }
     }
 
+    // 명령어로 제거되면 onKilled에서 e.isCancelled가 무시되기 때문
+    private fun maintainHitBox() {
+        var cnt = 1
+        Bukkit.getScheduler().runTaskTimer(plugin, {
+            if (cnt++ % 10 == 0) {
+                for (hitboxList in hitboxEntMap.values) {
+                    hitboxList.forEach(HitboxEntity::spawnNewOneIfItIsRemoved)
+                }
+            } else {
+                for (world in hitboxEntMap.keys) {
+                    if (hitboxEntMap[world]!!.first().spawnNewOneIfItIsRemoved()) {
+                        cnt = 10
+                    }
+                }
+            }
+        }, 20*1L, 20*1L)
+    }
 }
