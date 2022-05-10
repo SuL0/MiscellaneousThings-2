@@ -1,16 +1,13 @@
-package kr.sul.miscellaneousthings2.customarmor
+package kr.sul.miscellaneousthings2.customitem.armor
 
-import com.github.shynixn.mccoroutine.launch
 import com.goncalomb.bukkit.nbteditor.commands.CommandNBTItem
-import kotlinx.coroutines.delay
-import kr.sul.miscellaneousthings2.Main.Companion.plugin
-import kr.sul.miscellaneousthings2.customarmor.NbtDurabilityArmor.Companion.CURRENT_DURABILITY_LORE
-import kr.sul.miscellaneousthings2.customarmor.NbtDurabilityArmor.Companion.MAX_DURABILITY_LORE
+import kr.sul.miscellaneousthings2.customitem.armor.NbtDurabilityArmor.Companion.CURRENT_DURABILITY_LORE
+import kr.sul.miscellaneousthings2.customitem.armor.NbtDurabilityArmor.Companion.MAX_DURABILITY_LORE
 import kr.sul.servercore.util.ItemBuilder.nameIB
 import kr.sul.servercore.util.MsgPrefix
 import net.minecraft.server.v1_12_R1.ItemArmor
 import net.minecraft.server.v1_12_R1.NBTTagCompound
-import org.bukkit.Bukkit
+import net.minecraft.server.v1_12_R1.NBTTagList
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -27,14 +24,14 @@ object ArmorVendingMachine: CommandExecutor {
     private const val NBT_SPEED_KEY = "MiscellaneousThings.ArmorSpeed"
 
 
-    // 방어구 수정
+    // 방어구수정
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
         if (sender !is Player) return true
         val item = sender.inventory.itemInMainHand
         if (item == null) {
             sender.sendMessage("${PREFIX}방어구 아이템을 들어 주십시오.")
         }
-        if (CraftItemStack.asNMSCopy(item).item !is ItemArmor) {
+        if ((item as CraftItemStack).handle.item !is ItemArmor) {
             sender.sendMessage("${PREFIX}해당 아이템은 방어구가 아닙니다.")
             return true
         }
@@ -48,19 +45,7 @@ object ArmorVendingMachine: CommandExecutor {
         val durability = args[2].toInt()
         val speed = args[3].toFloat()
 
-        NBTItemCommand.mod_delallCommand(sender, arrayListOf("").toTypedArray())
-        // TODO 1틱 기다리는 것을 없애도 되나? (mod_delallCommand 때문)
-        plugin.launch {
-            delay(1) // 알아서 1틱만 쉼
-            if (!sender.isOnline) return@launch
-//            Bukkit.broadcastMessage("${item.type} != ${sender.inventory.itemInMainHand}")
-            if (item.type != sender.inventory.itemInMainHand.type) {
-                sender.sendMessage("${PREFIX}§c1틱 전의 아이템 타입과 현재의 아이템 타입이 다릅니다.")
-                return@launch
-            }
-            val item = sender.inventory.itemInMainHand
-            vendingMachine(sender, item, name, armorValue, durability, speed)  // TODO clone해서 item 넣고 vendingMachine은 ItemStack 내보내주는 게 좋을 듯
-        }
+        vendingMachine(sender, item, name, armorValue, durability, speed)  // TODO clone해서 item 넣고 vendingMachine은 ItemStack 내보내주는 게 좋을 듯
         return true
     }
 
@@ -74,6 +59,7 @@ object ArmorVendingMachine: CommandExecutor {
         }
         armorItem.nameIB(name)
         val tag = (armorItem as CraftItemStack).handle.tagOrDefault
+        clearAllAttribute(tag)
         setDefenseNBT(tag, defense)
         setSpeedNBT(tag, speed)
     }
@@ -89,5 +75,9 @@ object ArmorVendingMachine: CommandExecutor {
     }
     fun getSpeedNBT(tag: NBTTagCompound): Float {
         return tag.getFloat(NBT_SPEED_KEY)
+    }
+
+    private fun clearAllAttribute(tag: NBTTagCompound) {
+        tag.set("AttributeModifiers", NBTTagList())
     }
 }

@@ -1,9 +1,9 @@
-package kr.sul.miscellaneousthings2.customarmor
+package kr.sul.miscellaneousthings2.customitem.armor
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent
 import kr.sul.miscellaneousthings2.Main.Companion.plugin
-import kr.sul.miscellaneousthings2.customarmor.ArmorVendingMachine.getDefenseNBT
-import kr.sul.miscellaneousthings2.customarmor.ArmorVendingMachine.getSpeedNBT
+import kr.sul.miscellaneousthings2.customitem.armor.ArmorVendingMachine.getDefenseNBT
+import kr.sul.miscellaneousthings2.customitem.armor.ArmorVendingMachine.getSpeedNBT
 import net.minecraft.server.v1_12_R1.NBTTagCompound
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -97,7 +97,6 @@ class ArmorPlayer(val p: Player): Listener {
     }
 
 
-    // armorUpdate 만 넣으면 버그 발생
     // e.newItem은 CraftItemStack이 아님.  e.player.inventory.chestplate는 CraftItemStack임
     // e.newItem은 clone된 ItemStack
     @EventHandler(priority = EventPriority.HIGH)
@@ -106,21 +105,6 @@ class ArmorPlayer(val p: Player): Listener {
         if (e.originalNewItem != null && e.originalNewItem!!.type != Material.AIR) {
             Bukkit.broadcastMessage("§conArmorChanged new[${e.originalNewItem?.type}]: ${getDefenseNBT((e.originalNewItem as CraftItemStack).handle.tagOrDefault)} ${getSpeedNBT((e.originalNewItem as CraftItemStack).handle.tagOrDefault)}")
         }
-        // 테스트용
-//        val item = e.player.inventory.chestplate
-//
-//        val it = CraftItemStack.asCraftCopy(item)
-//        if (item is CraftItemStack) {
-//            Bukkit.broadcastMessage("§dIS handle same? ${item.handle == it.handle}")
-//            val rand = nextInt(1, 100000)
-//            item.handle.tagOrDefault.setBoolean("$rand", true)
-//            Bukkit.broadcastMessage("item.b ${item.handle.tagOrDefault.getBoolean("$rand")}")
-//            Bukkit.broadcastMessage("it.b   ${it.handle.tagOrDefault.getBoolean("$rand")}")
-//            item.amount = nextInt(1, 60)
-//            Bukkit.broadcastMessage("item.b ${item.amount}")
-//            Bukkit.broadcastMessage("it.b   ${it.amount}")
-//        }
-
         armorUpdate(e.slotType, e.originalNewItem)
     }
 
@@ -129,9 +113,9 @@ class ArmorPlayer(val p: Player): Listener {
     @EventHandler
     fun onDamage(e: EntityDamageEvent) {
         if (e.entity != p) return
+        // TODO fake로 플레이어에게 생성된 ArmorValue인지 정말 그냥 일반 갑옷이라서 그런건지 구분할 필요가 있음
+        Bukkit.broadcastMessage("§eonDamage ${e.damage} / ${e.finalDamage}")
         if (canBeProtected.contains(e.cause)) {
-            // TODO e.finalDamage vs e.damage?
-            Bukkit.broadcastMessage("§eonDamage ${e.damage} / ${e.finalDamage}")
             e.damage = e.finalDamage - (e.finalDamage * min(99/100.0, defense/100.0))
             nbtHelmet?.decreaseCurrentDurability(1)
             nbtChestPlate?.decreaseCurrentDurability(1)

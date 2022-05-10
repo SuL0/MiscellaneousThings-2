@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.customarmor
+package kr.sul.miscellaneousthings2.customitem.armor
 
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

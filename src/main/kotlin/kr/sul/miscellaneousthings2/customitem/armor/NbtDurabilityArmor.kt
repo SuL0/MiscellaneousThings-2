@@ -1,10 +1,9 @@
-package kr.sul.miscellaneousthings2.customarmor
+package kr.sul.miscellaneousthings2.customitem.armor
 
-import org.bukkit.Bukkit
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 import org.bukkit.inventory.ItemStack
 
-// 내구도는 수정 도와주는 Wrapper 정도 느낌
+// TODO 이거 DurabilityItemWrapper로 이식
 class NbtDurabilityArmor private constructor(val item: ItemStack) {
     val nmsItem = (item as CraftItemStack).handle
     val nmsItemTag = nmsItem.tagOrDefault
@@ -16,7 +15,6 @@ class NbtDurabilityArmor private constructor(val item: ItemStack) {
         }
         nmsItemTag.setInt(CURRENT_DURABILITY_KEY, curDur-i)
         updateLore()
-        Bukkit.broadcastMessage("$curDur -> ${nmsItemTag.getInt(CURRENT_DURABILITY_KEY)}")
     }
     private fun updateLore() {
         val whatLine = nmsItemTag.getInt(LINE_OF_DURABILITY_LORE_KEY)
@@ -30,7 +28,7 @@ class NbtDurabilityArmor private constructor(val item: ItemStack) {
         }
 
         val meta = item.itemMeta
-        val lore = meta.lore
+        val lore = meta.lore    // TODO 여기서 가끔 NullPointerException 뜨는데
         lore[whatLine] = replacedLine
         meta.lore = lore
         item.itemMeta = meta
