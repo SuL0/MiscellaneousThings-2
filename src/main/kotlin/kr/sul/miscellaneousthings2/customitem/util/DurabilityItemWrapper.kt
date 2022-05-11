@@ -1,18 +1,17 @@
 package kr.sul.miscellaneousthings2.customitem.util
 
-import kr.sul.servercore.util.UniqueIdAPI
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 import org.bukkit.entity.Player
 
-// 아이템에 {CUR_DUR}, {MAX_DUR} 있으면 업데이트 해 줘야함
-class DurabilityItemWrapper(val item: CraftItemStack, val p: Player? = null) {
+// TODO 아이템이 겹쳐진 상태라면? > 사용을 막아야 함
+open class DurabilityItemWrapper(val item: CraftItemStack, val p: Player? = null) {
     companion object {
         private const val CURRENT_DURABILITY_TAG = "Misc-CurrentDurability"
         private const val MAX_DURABILITY_TAG = "Misc-MaxDurability"
     }
-    var currentDurability: Int
+    open var currentDurability: Int
         get() {
             return item.handle.tagOrDefault.getInt(CURRENT_DURABILITY_TAG)
         }
@@ -35,10 +34,6 @@ class DurabilityItemWrapper(val item: CraftItemStack, val p: Player? = null) {
         set(value) {
             item.handle.tagOrDefault.setInt(MAX_DURABILITY_TAG, value)
         }
-    val uniqueID: String
-        get() {
-            return UniqueIdAPI.getUniqueID(item)!!
-        }
 
     fun editMaxDurability(maxDurability: Int) {
         if (this.maxDurability < maxDurability) {
@@ -51,7 +46,6 @@ class DurabilityItemWrapper(val item: CraftItemStack, val p: Player? = null) {
             }
             this.maxDurability = maxDurability
         }
-        // Item version identifier 업데이트?
     }
 
     fun initMaxDurability(maxDurability: Int) {

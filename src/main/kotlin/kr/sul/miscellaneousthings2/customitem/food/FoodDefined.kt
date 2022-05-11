@@ -26,27 +26,4 @@ enum class FoodDefined(
         ItemStackBasicInfo(Material.MELON, "§6수박", null),
         2
     );
-
-
-
-
-    // https://pjh3749.tistory.com/279 로 개선 여지 있음
-    companion object: CustomItemDefinedMgr<FoodDefined>("Food", values()) {
-        override fun makeNewItemStack(value: FoodDefined): CraftItemStack {
-            val item = super.makeNewItemStack(value)
-            item.loreIB("§7섭취시 회복량")
-            item.loreIB("")  // 하트 모양 addHealth 만큼 넣기
-            item.loreIB("§7섭취시 포만감")
-            item.loreIB("")  // 핫도그 모양 addFoodLevel 만큼 넣기
-            value.additionalLore?.forEach { lore ->
-                item.loreIB(lore)
-            }
-            return item
-        }
-
-//
-//        fun find(material: Material, itemName: String): FoodDefined? {
-//            return values().find { it.material == material && it.itemName == itemName }
-//        }
-    }
 }

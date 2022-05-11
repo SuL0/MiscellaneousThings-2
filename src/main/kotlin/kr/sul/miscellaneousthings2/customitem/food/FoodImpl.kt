@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.ItemStack
 
 
-// FIXME: e.isCancelled 때문에, 음식을 겹친 상태에서 연달아서 먹으면 안 먹어지는 사소한 버그가 있음
 object FoodImpl: Listener {
     @EventHandler
     fun onTest(e: PlayerCommandPreprocessEvent) {
@@ -26,7 +25,7 @@ object FoodImpl: Listener {
         if (e.isCancelled) return
 
         if (e.item.type.isEdible) {
-            val find = FoodDefined.findMatching(e.item)
+            val find = FoodDefinedMgr.findMatching(e.item)
 
             if (find != null) {
                 e.isCancelled = true

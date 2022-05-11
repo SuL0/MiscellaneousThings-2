@@ -6,6 +6,7 @@ import kr.sul.miscellaneousthings2.customitem.enums.HasUniqueID
 import kr.sul.miscellaneousthings2.customitem.util.ItemStackBasicInfo
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
+import java.util.*
 
 
 enum class MeleeWeaponDefined(
@@ -31,11 +32,4 @@ enum class MeleeWeaponDefined(
 //    1, 1, 0.2, 10
 //    );
 
-    companion object: CustomItemDefinedMgr<MeleeWeaponDefined>("Melee", values()) {
-        override fun makeNewItemStack(value: MeleeWeaponDefined): CraftItemStack {
-            val item = super.makeNewItemStack(value)
-            item.lore = value.loreFunc.invoke(value.maxDurability, value.maxDurability)
-            return item
-        }
-    }
 }
