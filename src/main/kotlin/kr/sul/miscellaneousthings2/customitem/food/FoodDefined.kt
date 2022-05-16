@@ -1,11 +1,8 @@
 package kr.sul.miscellaneousthings2.customitem.food
 
-import kr.sul.miscellaneousthings2.customitem.enums.CustomItemDefinedMgr
-import kr.sul.miscellaneousthings2.customitem.enums.NormalItem
+import kr.sul.miscellaneousthings2.customitem.forenum.NormalItem
 import kr.sul.miscellaneousthings2.customitem.util.ItemStackBasicInfo
-import kr.sul.servercore.util.ItemBuilder.loreIB
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 
 enum class FoodDefined(
     override val enumUuid: String,

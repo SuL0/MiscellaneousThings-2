@@ -54,8 +54,10 @@ dependencies {
     compileOnly("kr.sul:CrackShot-2:1.0-SNAPSHOT")
     compileOnly("xyz.upperlevel.spigot.book:spigot-book-api:1.5")
     compileOnly("com.comphenix.protocol:ProtocolLib:4.6.0")
+    compileOnly("com.comphenix.packetwrapper:PacketWrapper:1.12.2-R0.1-SNAPSHOT")  // 이걸로 패킷 생성해도 되긴 한데, 나중의 버전 업을 고려해서 그냥 코드 참고용으로만
     compileOnly("org.inventivetalent:glowapi:1.4.6-SNAPSHOT")
     compileOnly("de.tr7zw:item-nbt-api-plugin:2.6.0")
+    compileOnly("LibsDisguises:LibsDisguises:10.0.15")
 
     compileOnly(files("$pluginStorage/EnderVaults-Bukkit-v1.0.13.jar"))
     compileOnly(files("$pluginStorage/ResourcepackSoundPlayer_S.jar"))
@@ -80,6 +82,7 @@ spigot {
         create("인사하기")
         create("이동지점알림끄기")
         create("방어구수정")
+        create("customitems")
     }
 }
 

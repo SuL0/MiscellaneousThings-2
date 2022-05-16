@@ -1,8 +1,8 @@
 package kr.sul.miscellaneousthings2.customitem
 
-import kr.sul.miscellaneousthings2.customitem.enums.CustomItemDefinedMgr
-import kr.sul.miscellaneousthings2.customitem.enums.DurabilityItem
-import kr.sul.miscellaneousthings2.customitem.enums.NormalItem
+import kr.sul.miscellaneousthings2.customitem.forenum.CustomItemDefinedMgr
+import kr.sul.miscellaneousthings2.customitem.forenum.DurabilityItem
+import kr.sul.miscellaneousthings2.customitem.forenum.NormalItem
 import kr.sul.miscellaneousthings2.customitem.util.DurabilityItemWrapper
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 import org.bukkit.event.Listener

@@ -1,6 +1,6 @@
 package kr.sul.miscellaneousthings2.customitem.melee
 
-import kr.sul.miscellaneousthings2.customitem.enums.CustomItemDefinedMgr
+import kr.sul.miscellaneousthings2.customitem.forenum.CustomItemDefinedMgr
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 
 object MeleeWeaponDefinedMgr

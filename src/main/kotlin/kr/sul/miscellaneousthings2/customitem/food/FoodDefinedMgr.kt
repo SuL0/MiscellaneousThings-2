@@ -1,6 +1,6 @@
 package kr.sul.miscellaneousthings2.customitem.food
 
-import kr.sul.miscellaneousthings2.customitem.enums.CustomItemDefinedMgr
+import kr.sul.miscellaneousthings2.customitem.forenum.CustomItemDefinedMgr
 import kr.sul.servercore.util.ItemBuilder.loreIB
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 

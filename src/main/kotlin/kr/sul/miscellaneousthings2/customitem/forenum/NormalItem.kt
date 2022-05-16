@@ -1,4 +1,4 @@
-package kr.sul.miscellaneousthings2.customitem.enums
+package kr.sul.miscellaneousthings2.customitem.forenum
 
 import kr.sul.miscellaneousthings2.customitem.util.ItemStackBasicInfo
 

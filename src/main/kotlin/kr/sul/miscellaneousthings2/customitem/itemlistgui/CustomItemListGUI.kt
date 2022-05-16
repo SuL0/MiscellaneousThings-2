@@ -1,7 +1,6 @@
 package kr.sul.miscellaneousthings2.customitem.itemlistgui
 
-import kr.sul.miscellaneousthings2.customitem.CustomItemMain
-import kr.sul.miscellaneousthings2.customitem.enums.NormalItem
+import kr.sul.miscellaneousthings2.customitem.itemlistgui.button.SwitchCategoryButton
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -11,28 +10,47 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-// 페이지 넘겨서 카테고리 전환
+// 최상위 GUI 클래스
 class CustomItemListGUI(
-        private val p: Player
-    ): Listener {
+    private val p: Player
+): Listener {
     private val inv = Bukkit.createInventory(null, 9*6, "Custom Item List GUI")
-    private val currentPage = pages.first()
+    private var currentPage = Page(p, inv, SamplePage.list.first())
+    private val switchCategoryButtons = arrayListOf<SwitchCategoryButton>()
 
     init {
         p.openInventory(inv)
+        switchCategoryButtons.addAll(
+            SamplePage.list.mapIndexed { i, samplePage ->
+                SwitchCategoryButton(i, samplePage)
+            }
+        )
         switchPage(currentPage)
     }
 
 
     private fun switchPage(page: Page) {
-
+        currentPage = page
+        inv.clear()
+        // 카테고리 전환 버튼
+        switchCategoryButtons.forEach { button ->
+            button.place(inv)
+        }
+        page.organize(inv, 1, false)
     }
 
-    // 아이템 가져오기
     @EventHandler(priority = EventPriority.HIGH)
     fun onClick(e: InventoryClickEvent) {
-        if (e.isCancelled) return
+        if (e.isCancelled || e.whoClicked != p
+            || e.currentItem == null || e.clickedInventory != inv) return
+        e.isCancelled = true
 
+        // 카테고리 전환 버튼
+        switchCategoryButtons.find { it.whatSlotToAllocate == e.slot }?.let { switchCategoryButton ->
+            switchPage(Page(p, inv, switchCategoryButton.matchingSamplePage))
+            return
+        }
+        currentPage.onClick(e)
     }
 
 
@@ -48,21 +66,5 @@ class CustomItemListGUI(
     }
     private fun destroy() {
         HandlerList.unregisterAll(this)
-    }
-
-    companion object {
-        private val pages = arrayListOf<Page>()
-
-        init {
-            val enumClasses = CustomItemMain.customItemCategories.map { it.customItemDefineClass }
-            for (enumClass in enumClasses) {
-                pages.add(
-                    Page(
-                        enumClass.toString(),
-                        enumClass.enumConstants as Array<NormalItem>
-                    )
-                )
-            }
-        }
     }
 }

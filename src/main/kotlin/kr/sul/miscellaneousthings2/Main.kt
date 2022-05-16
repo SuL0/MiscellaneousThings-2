@@ -2,14 +2,19 @@ package kr.sul.miscellaneousthings2
 
 /* import kr.sul.miscellaneousthings2.something.HitAndDash */
 //import kr.sul.miscellaneousthings2.something.world.spawn.SpawnWorldFeatures
+import com.github.shynixn.mccoroutine.launch
+import kotlinx.coroutines.delay
 import kr.sul.miscellaneousthings2.chat.AreaChat
 import kr.sul.miscellaneousthings2.chat.ChatInSpawn
 import kr.sul.miscellaneousthings2.combatlog.CombatLog
 import kr.sul.miscellaneousthings2.command.EconomyCommand
 import kr.sul.miscellaneousthings2.command.KillAllCommand
 import kr.sul.miscellaneousthings2.command.NbtViewCommand
-import kr.sul.miscellaneousthings2.customarmor.ArmorMgr
-import kr.sul.miscellaneousthings2.customarmor.ArmorVendingMachine
+import kr.sul.miscellaneousthings2.customitem.CustomItemMain
+import kr.sul.miscellaneousthings2.customitem.armor.ArmorMgr
+import kr.sul.miscellaneousthings2.customitem.armor.ArmorVendingMachine
+import kr.sul.miscellaneousthings2.customitem.food.FoodDefined
+import kr.sul.miscellaneousthings2.customitem.melee.MeleeWeaponDefined
 import kr.sul.miscellaneousthings2.endervaultsaddon.SelectorListener
 import kr.sul.miscellaneousthings2.endervaultsaddon.VaultCommand
 import kr.sul.miscellaneousthings2.knockdown.RideTest
@@ -19,16 +24,17 @@ import kr.sul.miscellaneousthings2.mob.spawner.editmob.TestZombie
 import kr.sul.miscellaneousthings2.something.*
 import kr.sul.miscellaneousthings2.something.block.*
 import kr.sul.miscellaneousthings2.something.world.BackgroundMusicPlayer
-import kr.sul.miscellaneousthings2.something.world.FixTimeInSomeWorlds
 import kr.sul.miscellaneousthings2.something.world.TpToSpawnWhenFirstJoin
 import kr.sul.miscellaneousthings2.something.world.spawn.SpawnWorldFeatures
 import kr.sul.miscellaneousthings2.tutorial.TutorialPlayer
+import kr.sul.miscellaneousthings2.tutorial.captcha.CaptchaPlayer
 import kr.sul.miscellaneousthings2.warpgui.WarpGUI
 import kr.sul.miscellaneousthings2.warpgui.data.WarpPlayerDataMgr
 import kr.sul.miscellaneousthings2.warptobeachtown.FountainOfLife
 import kr.sul.miscellaneousthings2.warptobeachtown.WarpToBeachtownWorld
 import kr.sul.servercore.something.BossBarTimer
 import kr.sul.servercore.util.ItemBuilder.nameIB
+import kr.sul.servercore.util.MsgPrefix
 import kr.sul.servercore.util.ObjectInitializer
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -47,7 +53,16 @@ import xyz.upperlevel.spigot.book.BookUtil
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
+import java.util.*
 import java.util.logging.Level
+import java.util.stream.Collectors
+import java.util.stream.Stream
+import kotlin.math.round
+import kotlin.random.Random.Default.nextBoolean
+import kotlin.random.Random.Default.nextInt
+import kotlin.system.measureTimeMillis
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
 class Main : JavaPlugin(), Listener {
     companion object {
@@ -106,9 +121,12 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(SpawnWorldFeatures, plugin)
         ObjectInitializer.forceInit(MobSpawner::class.java)
         ObjectInitializer.forceInit(SelectorListener::class.java)
-        ObjectInitializer.forceInit(FixTimeInSomeWorlds::class.java)
+//        ObjectInitializer.forceInit(FixTimeInSomeWorlds::class.java)
         ObjectInitializer.forceInit(AutoReload::class.java)
         ObjectInitializer.forceInit(FountainOfLife::class.java)
+        ObjectInitializer.forceInit(CustomItemMain::class.java)
+
+        PacketViewer.register()
 
 
         getCommand("nbtview").executor = NbtViewCommand
@@ -122,6 +140,7 @@ class Main : JavaPlugin(), Listener {
     }
 
     // TODO TEST
+    @OptIn(ExperimentalTime::class)
     @EventHandler
     fun testCommand(e: PlayerCommandPreprocessEvent) {
         if (!e.player.isOp) return
@@ -339,10 +358,6 @@ class Main : JavaPlugin(), Listener {
 
             e.player.inventory.addItem(bookItem)
         }
-
-        if (e.message == "/captcha") {
-
-        }
         if (e.message == "/nms") {
             e.isCancelled = true
             val item = e.player.inventory.itemInMainHand
@@ -351,11 +366,10 @@ class Main : JavaPlugin(), Listener {
         }
 
         if (e.message == "/bytebuddy") {
+            // 정작 코드는 JavaProxy
             e.isCancelled = true
 
 //            val targetString = "테스트"
-
-
             val meta = e.player.inventory.itemInMainHand.itemMeta
             val invocationHandler = object: InvocationHandler {
                 val target = meta  // meta와는 다른 객체로 설정됨 < ??
@@ -417,10 +431,151 @@ class Main : JavaPlugin(), Listener {
             Bukkit.getScheduler().runTask(plugin) {
                 Bukkit.broadcastMessage("§a[1Tick]e.player.inventory.chestplate is CraftItemStack?: ${e.player.inventory.chestplate is CraftItemStack}")
             }
+        }
+        if (e.message == "/captcha") {
+            e.isCancelled = true
+            val captchaDigitSet = CaptchaPlayer.CaptchaDigitSet(0, 1)
+            captchaDigitSet.display(e.player)
+        }
+        if (e.message == "/checkImInHouse") {
+            e.isCancelled = true
+            val world = e.player.world
+            val loc = e.player.location
+            Bukkit.broadcastMessage("${world.getBlockAt(loc.blockX, loc.blockY, loc.blockZ).lightFromSky}")
+            return
+            val loopTimes = 10000000
+            val elapsedTime = measureTimeMillis {
+                for (i in 1..loopTimes) {
+                    world.getBlockAt(loc.blockX, loc.blockY+1, loc.blockZ).lightFromSky
+                }
+            }
+            val elapsedTime2 = measureTimeMillis {
+                for (i in 1..loopTimes) {
+                    for (i in 1..5) {
+                        if (world.getBlockAt(loc.blockX, loc.blockY+i, loc.blockZ).type == Material.AIR) {
 
+                        }
+                    }
+                }
+            }
+            Bukkit.broadcastMessage("lightFromSky: ${elapsedTime}")
+            Bukkit.broadcastMessage("just check y: ${elapsedTime2}")
+        }
+        if (e.message == "/checkRunningSpeed1") {
+            e.isCancelled = true
+            val origLoc = e.player.location
+            plugin.launch {
+                for (i in 1..40) {
+                    delay(1)
+                    if (origLoc.distance(e.player.location) >= 0.001) {
+                        Bukkit.broadcastMessage("start measuring")
+                        val loc1 = e.player.location
+                        delay(Duration.Companion.seconds(10))
+                        loc1.y = e.player.location.y
+                        Bukkit.broadcastMessage("${e.player.name}'s speed : ${round(e.player.location.distance(loc1) * 100) / (100.0 * 10)}")
+                        return@launch
+                    }
+                }
+            }
+        }
+        if (e.message == "/checkRunningSpeed2") {
+            plugin.launch {
+                for (i in 1..100) {
+                    val pastLoc = e.player.location
+                    delay(1)
+                    pastLoc.y = e.player.location.y
+                    Bukkit.broadcastMessage("${e.player.name}'s speed 1 : ${round(e.player.location.distance(pastLoc)*1000)/1000.0}")
+                }
+            }
+        }
+        if (e.message == "/customItemStack") {
+            if (e.player.inventory.itemInMainHand.type != Material.AIR) {
+                (e.player.inventory.itemInMainHand as TestItemStack).imCustom()
+                return
+            }
+            val item = CraftItemStack.asCraftMirror(CraftItemStack.asNMSCopy(TestItemStack(Material.DIAMOND)))
+            e.player.inventory.itemInMainHand = item
+            Bukkit.broadcastMessage("${item === e.player.inventory.itemInMainHand}")
+            Bukkit.broadcastMessage("${item.handle == (e.player.inventory.itemInMainHand as CraftItemStack).handle}")
+            (e.player.inventory.itemInMainHand as TestItemStack).imCustom()
+        }
+
+
+
+
+
+        if (e.message == "/nbtSpeed") {
+            e.isCancelled = true
+            if (e.player.inventory.itemInMainHand.type != Material.AIR) {
+                e.player.sendMessage("${MsgPrefix.get("TEST")} 손의 아이템을 비워야 합니다.")
+                return
+            }
+            val item = ItemStack(Material.DIAMOND)
+            e.player.inventory.itemInMainHand = item
+            val itemInHand = (e.player.inventory.itemInMainHand as CraftItemStack)
+            itemInHand.handle.tagOrDefault.setString("testStr", UUID.randomUUID().toString())
+            itemInHand.handle.tagOrDefault.setInt("testInt", nextInt( 100000))
+            itemInHand.handle.tagOrDefault.setBoolean("testBool", true)
+
+//            val howManyTimes = 500000000
+            val howManyTimes = 10000000
+
+            plugin.launch {
+
+                delay(1)
+
+                val timer = measureTimeMillis {
+                    for (i in 1..howManyTimes) {
+                        itemInHand.handle.tagOrDefault.setString("testStr", nextInt(10).toString())
+                    }
+                }
+                Bukkit.broadcastMessage("${howManyTimes}-str : ${timer/1000.0}s  ${timer}ms")
+                delay(1)
+
+                val timer2 = measureTimeMillis {
+                    for (i in 1..howManyTimes) {
+                        itemInHand.handle.tagOrDefault.setInt("testInt", nextInt(10))
+                    }
+                }
+                Bukkit.broadcastMessage("${howManyTimes}-int : ${timer2/1000.0}s  ${timer2}ms")
+                delay(1)
+
+                val timer3 = measureTimeMillis {
+                    for (i in 1..howManyTimes) {
+                        itemInHand.handle.tagOrDefault.setBoolean("testBool", nextBoolean())
+                    }
+                }
+                Bukkit.broadcastMessage("${howManyTimes}-bool : ${timer3/1000.0}s  ${timer3}ms")
+                delay(1)
+
+                var a = "aaaaa"
+                val timer4 = measureTimeMillis {
+                    for (i in 1..howManyTimes) {
+                        a = nextInt(10).toString()
+                    }
+                }
+                Bukkit.broadcastMessage("${howManyTimes}-val : ${timer4/1000.0}s  ${timer4}ms")
+
+                val timer5 = measureTimeMillis {
+                    for (i in 1..howManyTimes) {
+                        val nms = CraftItemStack.asNMSCopy(itemInHand)
+                        nms.tagOrDefault.setInt("testInt", nextInt(10))
+                    }
+                }
+                Bukkit.broadcastMessage("${howManyTimes}-past way : ${timer5/1000.0}s  ${timer5}ms")
+
+                val timer6 = measureTimeMillis {
+                    for (i in 1..howManyTimes) {
+                        val newObj = TestItemWrapper(item)
+                    }
+                }
+                Bukkit.broadcastMessage("${howManyTimes}-obj creation : ${timer6/1000.0}s  ${timer6}ms")
+
+
+                greaterThan<Int>(1, 3)
+            }
         }
     }
-
 
     private fun parseIntToTwoDigitStr(i: Int): String {
         if (i < 10) {
@@ -428,6 +583,18 @@ class Main : JavaPlugin(), Listener {
         }
         return "$i"
     }
+
+    // T: Comparable<Any> 라면 이해하는데 어떻게 T: Comparable<T> 가 될 수 있지? 순환참조 아닌가?
+    // -> Int : Comparable<Int>
+    // T == Comparable<T> 로 해석하면 안됨
+    // 일단 T에 타입을 넣고 T: Comparable<T> 로 해석하면 됨. 그냥 클래스처럼 Int : Comparable<Int>
+    private fun <T : Comparable<T>> greaterThan(lhs: T, rhs: T): Boolean {
+        return lhs > rhs
+    }
+    private fun gen(a: Array<out Int>) {
+
+    }
+
 
 //    lateinit var dashMap : EntityTempDataMap<Int>
 //    fun init() {
@@ -455,19 +622,13 @@ class Main : JavaPlugin(), Listener {
 //    }
 }
 
-open class Source {
-    fun hello(name: String?): String {
-//        Bukkit.broadcastMessage("a")
-        return "a"
+class TestItemStack(type: Material): ItemStack(type) {
+    fun imCustom() {
+        Bukkit.broadcastMessage("yeah")
     }
 }
-
-open class Target {
-    companion object {
-        fun hello(name: String): String {
-//            Bukkit.broadcastMessage("Hello $name!")
-            return "Hello $name!"
-        }
+class TestItemWrapper(val item: ItemStack) {
+    fun sdf() {
+        Bukkit.broadcastMessage(item.type.toString())
     }
 }
-
