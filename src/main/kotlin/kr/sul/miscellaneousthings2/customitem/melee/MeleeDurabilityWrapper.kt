@@ -6,11 +6,14 @@ import org.bukkit.entity.Player
 
 class MeleeDurabilityWrapper(private val enumFound: MeleeWeaponDefined, item: CraftItemStack, p: Player? = null)
         : DurabilityItemWrapper(item, p) {
+
     override var currentDurability: Int
         get() = super.currentDurability
         set(value) {
-            item.lore = enumFound.loreFunc.invoke(currentDurability-1, enumFound.maxDurability)
             super.currentDurability = value
-            // 아이템이 파괴됐을 수 있음
+            // 아이템이 부숴지지 않았을 경우
+            if (value > 0) {
+                item.lore = enumFound.loreFunc.invoke(currentDurability-1, enumFound.maxDurability)
+            }
         }
 }

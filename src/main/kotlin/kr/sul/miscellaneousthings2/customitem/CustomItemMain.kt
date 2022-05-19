@@ -15,6 +15,7 @@ import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 
 object CustomItemMain {
+    // 공변성 문제로 골머리를 썩히느니 그냥 casting을 했음
     val customItemCategories = listOf(
         CustomItemCategory(MeleeWeaponDefined::class.java, MeleeWeaponDefinedMgr as CustomItemDefinedMgr<NormalItem>, MeleeWeaponImpl),
         CustomItemCategory(FoodDefined::class.java, FoodDefinedMgr as CustomItemDefinedMgr<NormalItem>, FoodImpl)

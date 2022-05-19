@@ -2,6 +2,7 @@ package kr.sul.miscellaneousthings2.customitem.itemlistgui
 
 import kr.sul.miscellaneousthings2.customitem.itemlistgui.button.InnerPageButton
 import kr.sul.servercore.util.MsgPrefix
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
@@ -29,7 +30,7 @@ class Page(
             button.place(inv)
         }
         // 실질적 내용인 아이템
-        for (i in 0 until min(INNER_PAGE_LINES, customItemDefined.size-((innerPage-1)*INNER_PAGE_LINES))) {
+        for (i in 0 until min(INNER_PAGE_LINES*9, customItemDefined.size-((innerPage-1)*INNER_PAGE_LINES))) {
             inv.setItem(i+9, customItemDefinedMgr.makeNewItemStack(customItemDefined[((innerPage-1)*INNER_PAGE_LINES)+i]))
         }
     }
