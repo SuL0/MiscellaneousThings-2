@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.ItemStack
 
-
 object FoodImpl: Listener {
     @EventHandler
     fun onTest(e: PlayerCommandPreprocessEvent) {
@@ -24,8 +23,9 @@ object FoodImpl: Listener {
     fun onEatFood(e: PlayerItemConsumeEvent) {
         if (e.isCancelled) return
 
-        if (e.item.type.isEdible) {
-            val find = FoodDefinedMgr.findMatching(e.item)
+        if (e.player.inventory.itemInMainHand.type.isEdible) {
+//            val find = FoodDefinedMgr.findMatching(e.item)  // e.item이 ItemStack을 clone 하는 바람에 ItemStack이 CraftItemStack이 아니게 됨
+            val find = FoodDefinedMgr.findMatching(e.player.inventory.itemInMainHand)
 
             if (find != null) {
                 e.isCancelled = true
