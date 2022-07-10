@@ -1,5 +1,8 @@
 package kr.sul.miscellaneousthings2.customitem.food
 
+import kr.sul.miscellaneousthings2.Main.Companion.plugin
+import org.bukkit.Bukkit
+import org.bukkit.attribute.Attribute
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -29,22 +32,37 @@ object FoodImpl: Listener {
 
             if (find != null) {
                 e.isCancelled = true
-
-                if (e.player.inventory.itemInMainHand.amount == 1) {
-                    e.player.inventory.itemInMainHand = null
-                } else {
-                    e.player.inventory.itemInMainHand.amount -= 1
-                    // 아래 없어도 amount 줄어드는 거 업데이트는 잘 되는데,
-                    // 중요한 역할은 2번째 아이템을 갉아먹을 때 계속 갉아먹기만 하고 정작 아이템은 먹히질 않는 문제를 해결해 줌 (이유는 모르겠는데, SET_SLOT 패킷 똑같이 protocolLib으로 보내줘도 얘는 안됨)
-                    e.player.inventory.itemInMainHand = e.player.inventory.itemInMainHand
-                }
-                if (e.player.health + (find.addFoodLevel/4) <= 20) {
-                    e.player.health += (find.addFoodLevel/4)  // 1이 반 칸
-                } else {
-                    e.player.health = 20.0
-                }
-                e.player.foodLevel += find.addFoodLevel  // 1이 반 칸
+                find.consume(e.player)
             }
+        }
+
+        Bukkit.getScheduler().runTask(plugin) {
+            if (e.player.foodLevel >= 20) {
+                e.player.foodLevel = 19
+            }
+        }
+    }
+
+    private fun FoodDefined.consume(p: Player) {
+        if (p.inventory.itemInMainHand.amount == 1) {
+            p.inventory.itemInMainHand = null
+        } else {
+            p.inventory.itemInMainHand.amount -= 1
+            // 아래 없어도 amount 줄어드는 거 업데이트는 잘 되는데,
+            // 중요한 역할은 2번째 아이템을 갉아먹을 때 계속 갉아먹기만 하고 정작 아이템은 먹히질 않는 문제를 해결해 줌 (이유는 모르겠는데, SET_SLOT 패킷 똑같이 protocolLib으로 보내줘도 얘는 안됨)
+            p.inventory.itemInMainHand = p.inventory.itemInMainHand
+        }
+
+        if (p.health + addHealthLevel <= p.getAttribute(Attribute.GENERIC_MAX_HEALTH).value) {
+            p.health += addHealthLevel  // 1이 반 칸
+        } else {
+            p.health = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).value
+        }
+
+        if (p.foodLevel + this.addFoodLevel < 20) {
+            p.foodLevel += this.addFoodLevel  // 1이 반 칸
+        } else {
+            p.foodLevel = 19
         }
     }
 

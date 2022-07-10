@@ -17,9 +17,4 @@ object FoodDefinedMgr
         }
         return item
     }
-
-//
-//        fun find(material: Material, itemName: String): FoodDefined? {
-//            return values().find { it.material == material && it.itemName == itemName }
-//        }
 }

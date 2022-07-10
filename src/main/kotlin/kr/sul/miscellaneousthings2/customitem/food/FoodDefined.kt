@@ -10,7 +10,6 @@ enum class FoodDefined(
     val addFoodLevel: Int,  // addFoodLevel : addHealth = 4 : 1   1에 반칸
     val additionalLore: List<String>? = null
 ): NormalItem {
-
     COOKIE("bea9fb28-e181-4150-b66e-dbbfcad3bf3a",
         ItemStackBasicInfo(Material.COOKIE, "§6초코칩 쿠키", null),
         2
@@ -23,10 +22,11 @@ enum class FoodDefined(
         ItemStackBasicInfo(Material.MELON, "§6수박", null),
         2
     ),
-    CHOCOLATE_PIE("b5b18aae-125f-48d8-9607-dd1bd02f658a",
-        ItemStackBasicInfo(Material.CARROT, "§6초코파이", null),
-        3
-    ),
+    // Carrot이 심을 수 있는 아이템이라서 버그가 남
+//    CHOCOLATE_PIE("b5b18aae-125f-48d8-9607-dd1bd02f658a",
+//        ItemStackBasicInfo(Material.CARROT, "§6초코파이", null),
+//        3
+//    ),
     RAMYEON("9a35fc31-ff3d-4333-96fc-2d4b09df8b6e",
         ItemStackBasicInfo(Material.APPLE, "§6생 라면", null),
         4
@@ -67,4 +67,5 @@ enum class FoodDefined(
         ItemStackBasicInfo(Material.COOKED_BEEF, "§6초코파이 상자", null),
         5
     );
+    val addHealthLevel = addFoodLevel/4.0
 }
